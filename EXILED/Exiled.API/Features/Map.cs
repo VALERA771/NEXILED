@@ -49,6 +49,7 @@ namespace Exiled.API.Features
         internal static readonly List<PocketDimensionTeleport> TeleportsValue = new(8);
 
         private static AmbientSoundPlayer ambientSoundPlayer;
+        private static SkyboxHubert skyboxHubert;
 
         private static SqueakSpawner squeakSpawner;
 
@@ -61,6 +62,19 @@ namespace Exiled.API.Features
         /// Gets the amnestic cloud prefab.
         /// </summary>
         public static Scp939AmnesticCloudInstance AmnesticCloudPrefab => AmnesticCloudHazard.AmnesticCloudPrefab; // TODO: Remove this.
+
+        public static SkyboxHubert SkyboxHubert
+        {
+            get
+            {
+                if (skyboxHubert == null)
+                {
+                    skyboxHubert = Object.FindObjectOfType<SkyboxHubert>();
+                }
+
+                return skyboxHubert;
+            }
+        }
 
         /// <summary>
         /// Gets a value indicating whether decontamination has begun in the light containment zone.
@@ -127,6 +141,16 @@ namespace Exiled.API.Features
         /// Gets the <see cref="global::SqueakSpawner"/>.
         /// </summary>
         public static SqueakSpawner SqueakSpawner => squeakSpawner ??= Object.FindObjectOfType<SqueakSpawner>();
+
+        /// <summary>
+        /// Gets or sets a value indicating whether HUBERT HUBERT HUBERT HUBERT HUBERT HUBERT HUBERT HUBERT HUBERT HUBERT HUBERT HUBERT HUBERT HUBERT HUBERT HUBERT HUBERT HUBERT HUBERT HUBERT HUBERT HUBERT.
+        /// HUBERT HUBERT HUBERT HUBERT HUBERT HUBERT HUBERT HUBERT HUBERT HUBERT HUBERT HUBERT HUBERT HUBERT HUBERT HUBERT HUBERT HUBERT HUBERT HUBERT HUBERT HUBERT HUBERT.
+        /// </summary>
+        public static bool IsHubertSky
+        {
+            get => SkyboxHubert.NetworkHubert;
+            set => SkyboxHubert.NetworkHubert = value;
+        }
 
         /// <summary>
         /// Broadcasts a message to all <see cref="Player">players</see>.
