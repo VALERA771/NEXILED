@@ -63,6 +63,9 @@ namespace Exiled.API.Features
         /// </summary>
         public static Scp939AmnesticCloudInstance AmnesticCloudPrefab => AmnesticCloudHazard.AmnesticCloudPrefab; // TODO: Remove this.
 
+        /// <summary>
+        /// Gets the Hubert Sky prefab.
+        /// </summary>
         public static SkyboxHubert SkyboxHubert
         {
             get
