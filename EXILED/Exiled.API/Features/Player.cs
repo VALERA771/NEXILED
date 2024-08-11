@@ -2397,7 +2397,7 @@ namespace Exiled.API.Features
         /// <param name="type">The <see cref="AmmoType"/> of the ammo to check.</param>
         /// <param name="ignoreArmor">If the method should ignore the armor the player is wearing.</param>
         /// <returns>The maximum amount of ammo this player can carry.</returns>
-        public ushort GetAmmoLimit(AmmoType type, bool ignoreArmor = false)
+        public ushort GetAmmoLimit(AmmoType type, bool ignoreArmor)
         {
             if (ignoreArmor)
             {
@@ -2408,6 +2408,17 @@ namespace Exiled.API.Features
                 return ServerConfigSynchronizer.Singleton.AmmoLimitsSync.FirstOrDefault(x => x.AmmoType == itemType).Limit;
             }
 
+            return InventorySystem.Configs.InventoryLimits.GetAmmoLimit(type.GetItemType(), referenceHub);
+        }
+
+        /// <summary>
+        /// Gets the maximum amount of ammo the player can hold, given the ammo <see cref="AmmoType"/>.
+        /// </summary>
+        /// <param name="type">The <see cref="AmmoType"/> of the ammo to check.</param>
+        /// <returns>The maximum amount of ammo this player can carry.</returns>
+        [Obsolete("Use Player::GetAmmoLimit(AmmoType, bool) instead.")]
+        public ushort GetAmmoLimit(AmmoType type)
+        {
             return InventorySystem.Configs.InventoryLimits.GetAmmoLimit(type.GetItemType(), referenceHub);
         }
 
