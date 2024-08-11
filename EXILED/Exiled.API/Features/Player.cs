@@ -2397,7 +2397,7 @@ namespace Exiled.API.Features
         /// <param name="type">The <see cref="AmmoType"/> of the ammo to check.</param>
         /// <param name="ignoreArmor">If the method should ignore the armor the player is wearing.</param>
         /// <returns>The maximum amount of ammo this player can carry.</returns>
-        public ushort GetAmmoLimit(AmmoType type, bool ignoreArmor)
+        public ushort GetAmmoLimit(AmmoType type, bool ignoreArmor = false)
         {
             if (ignoreArmor)
             {
