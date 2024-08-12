@@ -2417,7 +2417,7 @@ namespace Exiled.API.Features
         /// <param name="type">The <see cref="AmmoType"/> of the ammo to check.</param>
         /// <returns>The maximum amount of ammo this player can carry.</returns>
         [Obsolete("Use Player::GetAmmoLimit(AmmoType, bool) instead.")]
-        public ushort GetAmmoLimit(AmmoType type)
+        public int GetAmmoLimit(AmmoType type)
         {
             return (int)InventorySystem.Configs.InventoryLimits.GetAmmoLimit(type.GetItemType(), referenceHub);
         }
