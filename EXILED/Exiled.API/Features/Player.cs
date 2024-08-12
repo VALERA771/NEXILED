@@ -2419,7 +2419,7 @@ namespace Exiled.API.Features
         [Obsolete("Use Player::GetAmmoLimit(AmmoType, bool) instead.")]
         public ushort GetAmmoLimit(AmmoType type)
         {
-            return InventorySystem.Configs.InventoryLimits.GetAmmoLimit(type.GetItemType(), referenceHub);
+            return (int)InventorySystem.Configs.InventoryLimits.GetAmmoLimit(type.GetItemType(), referenceHub);
         }
 
         /// <summary>
