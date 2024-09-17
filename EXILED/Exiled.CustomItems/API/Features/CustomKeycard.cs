@@ -7,6 +7,8 @@
 
 namespace Exiled.CustomItems.API.Features
 {
+    using System;
+
     using Exiled.API.Enums;
     using Exiled.API.Extensions;
     using Exiled.API.Features;
@@ -20,6 +22,20 @@ namespace Exiled.CustomItems.API.Features
     /// </summary>
     public abstract class CustomKeycard : CustomItem
     {
+        /// <inheritdoc/>
+        /// <exception cref="ArgumentOutOfRangeException">Throws if specified <see cref="ItemType"/> is not Keycard.</exception>
+        public override ItemType Type
+        {
+            get => base.Type;
+            set
+            {
+                if (!value.IsKeycard())
+                    throw new ArgumentOutOfRangeException("Type", value, "Invalid keycard type.");
+
+                base.Type = value;
+            }
+        }
+
         /// <summary>
         /// Gets or sets the permissions for custom keycard.
         /// </summary>
