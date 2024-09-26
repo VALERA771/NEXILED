@@ -5,6 +5,10 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using Exiled.API.Features.Items;
+using Exiled.API.Features.Pickups;
+using UnityEngine;
+
 namespace Exiled.CustomItems.API.Features
 {
     using System;
@@ -41,13 +45,30 @@ namespace Exiled.CustomItems.API.Features
         /// </summary>
         public virtual KeycardPermissions Permissions { get; set; }
 
+        /// <inheritdoc/>
+        public override void Give(Player player, Item item, bool displayMessage = true)
+        {
+            base.Give(player, item, displayMessage);
+
+            if (item.Is(out Keycard card))
+                card.Permissions = Permissions;
+        }
+
+        /// <inheritdoc/>
+        public override Pickup? Spawn(Vector3 position, Item item, Player? previousOwner = null)
+        {
+            if (item.Is(out Keycard card))
+                card.Permissions = Permissions;
+
+            return base.Spawn(position, item, previousOwner);
+        }
+
         /// <summary>
         /// Called when custom keycard interacts with a door.
         /// </summary>
         /// <param name="player">Owner of Custom keycard.</param>
         /// <param name="door">Door with which interacting.</param>
-        /// <param name="isAllowed">Indicates whether door can be opened.</param>
-        protected virtual void OnInteractingDoor(Player player, Door door, ref bool isAllowed)
+        protected virtual void OnInteractingDoor(Player player, Door door)
         {
         }
 
@@ -56,8 +77,7 @@ namespace Exiled.CustomItems.API.Features
         /// </summary>
         /// <param name="player">Owner of Custom keycard.</param>
         /// <param name="chamber">Chamber with which interacting.</param>
-        /// <param name="isAllowed">Indicates whether chamber can be opened.</param>
-        protected virtual void OnInteractingLocker(Player player, LockerChamber chamber, ref bool isAllowed)
+        protected virtual void OnInteractingLocker(Player player, LockerChamber chamber)
         {
         }
 
@@ -66,20 +86,7 @@ namespace Exiled.CustomItems.API.Features
             if (!Check(ev.Pickup))
                 return;
 
-            if (!ev.Door.IsKeycardDoor || ev.Door.KeycardPermissions == KeycardPermissions.None || ev.Door.IsLocked || ev.Player.IsBypassModeEnabled)
-                return;
-
-            if (ev.Door.KeycardPermissions.HasFlagFast(KeycardPermissions.ScpOverride))
-            {
-                ev.IsAllowed = Permissions.HasFlagFast(KeycardPermissions.Checkpoints);
-                return;
-            }
-
-            bool isAllowed = Permissions.HasFlagFast(ev.Door.KeycardPermissions);
-
-            OnInteractingDoor(ev.Player, ev.Door, ref isAllowed);
-
-            ev.IsAllowed = isAllowed;
+            OnInteractingDoor(ev.Player, ev.Door);
         }
 
         private void OnInternalInteractingDoor(InteractingDoorEventArgs ev)
@@ -87,20 +94,7 @@ namespace Exiled.CustomItems.API.Features
             if (!Check(ev.Player.CurrentItem))
                 return;
 
-            if (ev.Door.KeycardPermissions == KeycardPermissions.None || ev.Door.IsLocked || ev.Player.IsBypassModeEnabled)
-                return;
-
-            if (ev.Door.KeycardPermissions.HasFlagFast(KeycardPermissions.ScpOverride))
-            {
-                ev.IsAllowed = Permissions.HasFlagFast(KeycardPermissions.Checkpoints);
-                return;
-            }
-
-            bool isAllowed = Permissions.HasFlagFast(ev.Door.KeycardPermissions);
-
-            OnInteractingDoor(ev.Player, ev.Door, ref isAllowed);
-
-            ev.IsAllowed = isAllowed;
+            OnInteractingDoor(ev.Player, ev.Door);
         }
 
         private void OnInternalInteractingLocker(InteractingLockerEventArgs ev)
@@ -108,14 +102,7 @@ namespace Exiled.CustomItems.API.Features
             if (!Check(ev.Player.CurrentItem))
                 return;
 
-            if ((KeycardPermissions)ev.Chamber.RequiredPermissions == KeycardPermissions.None || ev.Player.IsBypassModeEnabled)
-                return;
-
-            bool isAllowed = Permissions.HasFlagFast((KeycardPermissions)ev.Chamber.RequiredPermissions);
-
-            OnInteractingLocker(ev.Player, ev.Chamber, ref isAllowed);
-
-            ev.IsAllowed = isAllowed;
+            OnInteractingLocker(ev.Player, ev.Chamber);
         }
     }
 }
