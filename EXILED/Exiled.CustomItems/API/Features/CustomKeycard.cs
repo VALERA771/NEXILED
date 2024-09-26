@@ -5,6 +5,8 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using Exiled.API.Features.Lockers;
+
 namespace Exiled.CustomItems.API.Features
 {
     using System;
@@ -76,7 +78,7 @@ namespace Exiled.CustomItems.API.Features
         /// </summary>
         /// <param name="player">Owner of Custom keycard.</param>
         /// <param name="chamber">Chamber with which interacting.</param>
-        protected virtual void OnInteractingLocker(Player player, LockerChamber chamber)
+        protected virtual void OnInteractingLocker(Player player, Chamber chamber)
         {
         }
 
@@ -101,7 +103,7 @@ namespace Exiled.CustomItems.API.Features
             if (!Check(ev.Player.CurrentItem))
                 return;
 
-            OnInteractingLocker(ev.Player, ev.Chamber);
+            OnInteractingLocker(ev.Player, ev.InteractingChamber);
         }
     }
 }
