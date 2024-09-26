@@ -5,10 +5,6 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using Exiled.API.Features.Items;
-using Exiled.API.Features.Pickups;
-using UnityEngine;
-
 namespace Exiled.CustomItems.API.Features
 {
     using System;
@@ -17,9 +13,12 @@ namespace Exiled.CustomItems.API.Features
     using Exiled.API.Extensions;
     using Exiled.API.Features;
     using Exiled.API.Features.Doors;
+    using Exiled.API.Features.Items;
+    using Exiled.API.Features.Pickups;
     using Exiled.Events.EventArgs.Item;
     using Exiled.Events.EventArgs.Player;
     using MapGeneration.Distributors;
+    using UnityEngine;
 
     /// <summary>
     /// The Custom keycard base class.
