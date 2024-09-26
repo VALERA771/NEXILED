@@ -18,7 +18,6 @@ namespace Exiled.CustomItems.API.Features
     using Exiled.API.Features.Pickups;
     using Exiled.Events.EventArgs.Item;
     using Exiled.Events.EventArgs.Player;
-    using MapGeneration.Distributors;
     using UnityEngine;
 
     /// <summary>
@@ -79,6 +78,26 @@ namespace Exiled.CustomItems.API.Features
         /// <param name="chamber">Chamber with which interacting.</param>
         protected virtual void OnInteractingLocker(Player player, Chamber chamber)
         {
+        }
+
+        /// <inheritdoc/>
+        protected override void SubscribeEvents()
+        {
+            base.SubscribeEvents();
+
+            Exiled.Events.Handlers.Player.InteractingDoor += OnInternalInteractingDoor;
+            Exiled.Events.Handlers.Player.InteractingLocker += OnInternalInteractingLocker;
+            Exiled.Events.Handlers.Item.KeycardInteracting += OnInternalKeycardInteracting;
+        }
+
+        /// <inheritdoc/>
+        protected override void UnsubscribeEvents()
+        {
+            base.UnsubscribeEvents();
+
+            Exiled.Events.Handlers.Player.InteractingDoor -= OnInternalInteractingDoor;
+            Exiled.Events.Handlers.Player.InteractingLocker -= OnInternalInteractingLocker;
+            Exiled.Events.Handlers.Item.KeycardInteracting -= OnInternalKeycardInteracting;
         }
 
         private void OnInternalKeycardInteracting(KeycardInteractingEventArgs ev)
