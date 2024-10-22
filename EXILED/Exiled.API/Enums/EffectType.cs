@@ -251,7 +251,7 @@ namespace Exiled.API.Enums
         Prismatic,
 
         /// <summary>
-        /// <see cref="CustomPlayerEffects.Prismatic"/>
+        /// <see cref="CustomPlayerEffects.SlowMetabolism"/>
         /// </summary>
         SlowMetabolism,
 
