@@ -259,5 +259,10 @@ namespace Exiled.API.Enums
         /// .
         /// </summary>
         SpicyFlame,
+
+        /// <summary>
+        /// .
+        /// </summary>
+        MetalPipe,
     }
 }

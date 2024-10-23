@@ -68,6 +68,9 @@ namespace Exiled.API.Features.DamageHandlers
                         Damage = damage,
                     };
                     break;
+                case DamageType.MetalPipe:
+                    Base = new MetalPipeDamageHandler(attacker.ReferenceHub, Damage);
+                    break;
                 case DamageType.Falldown:
                     Base = new UniversalDamageHandler(damage, DeathTranslations.Falldown, cassieAnnouncement);
                     break;
