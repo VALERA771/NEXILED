@@ -62,6 +62,12 @@ namespace Exiled.API.Features.DamageHandlers
 
             switch (damageType)
             {
+                case DamageType.Silent:
+                    Base = new SilentDamageHandler()
+                    {
+                        Damage = damage,
+                    };
+                    break;
                 case DamageType.Falldown:
                     Base = new UniversalDamageHandler(damage, DeathTranslations.Falldown, cassieAnnouncement);
                     break;

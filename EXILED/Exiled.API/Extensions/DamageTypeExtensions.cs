@@ -162,6 +162,8 @@ namespace Exiled.API.Extensions
         {
             switch (damageHandlerBase)
             {
+                case SilentDamageHandler:
+                    return DamageType.Silent;
                 case CustomReasonDamageHandler:
                     return DamageType.Custom;
                 case WarheadDamageHandler:
