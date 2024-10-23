@@ -216,6 +216,7 @@ namespace Exiled.API.Enums
         /// <summary>
         /// Makes you a marshmallow guy.
         /// </summary>
+        [Obsolete("Not functional in-game")]
         Marshmallow,
 
         /// <summary>
@@ -238,11 +239,6 @@ namespace Exiled.API.Enums
         /// <see cref="CustomPlayerEffects.Slowness"/>.
         /// </summary>
         Slowness,
-
-        /// <summary>
-        /// Makes player metal.
-        /// </summary>
-        Metal,
 
         /// <summary>
         /// <see cref="CustomPlayerEffects.OrangeCandy"/>
