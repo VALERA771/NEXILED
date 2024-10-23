@@ -3763,10 +3763,10 @@ namespace Exiled.API.Features
         public void ExplodeEffect(ProjectileType projectileType) => Map.ExplodeEffect(Position, projectileType);
 
         /// <summary>
-        /// .
+        /// Shakes camera with metal pipe falling shake effect.
         /// </summary>
-        /// <param name="intensity">intensity.</param>
-        public void ShakeCameraHalloween(float intensity) => referenceHub.connectionToClient.Send(new ShakeCameraMessage(intensity / 100f), 0);
+        /// <param name="intensity">Intensity of the shake.</param>
+        public void ShakeCameraPipe(float intensity) => referenceHub.connectionToClient.Send(new ShakeCameraMessage(intensity / 100f), 0);
 
         /// <summary>
         /// Converts the player in a human-readable format.
