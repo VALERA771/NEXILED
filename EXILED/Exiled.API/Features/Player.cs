@@ -3763,6 +3763,12 @@ namespace Exiled.API.Features
         public void ExplodeEffect(ProjectileType projectileType) => Map.ExplodeEffect(Position, projectileType);
 
         /// <summary>
+        /// .
+        /// </summary>
+        /// <param name="intensity">intensity.</param>
+        public void ShakeCameraHalloween(float intensity) => referenceHub.connectionToClient.Send(new ShakeCameraMessage(intensity / 100f), 0);
+
+        /// <summary>
         /// Converts the player in a human-readable format.
         /// </summary>
         /// <returns>A string containing Player-related data.</returns>
