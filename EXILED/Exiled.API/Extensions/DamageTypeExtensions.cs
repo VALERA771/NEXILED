@@ -166,6 +166,8 @@ namespace Exiled.API.Extensions
             {
                 case SilentDamageHandler:
                     return DamageType.Silent;
+                case MetalPipeDamageHandler:
+                    return DamageType.MetalPipe;
                 case CustomReasonDamageHandler:
                     return DamageType.Custom;
                 case WarheadDamageHandler:
