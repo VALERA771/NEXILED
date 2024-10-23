@@ -150,8 +150,8 @@ namespace Exiled.API.Features
         /// </summary>
         public static bool IsHubertSky
         {
-            get => SkyboxHubert._singleton.Hubert;
-            set => SkyboxHubert._singleton.NetworkHubert = value;
+            get => SkyboxHubert.Hubert;
+            set => SkyboxHubert.NetworkHubert = value;
         }
 
         /// <summary>

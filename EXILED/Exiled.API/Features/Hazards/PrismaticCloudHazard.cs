@@ -5,6 +5,8 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System.Linq;
+
 namespace Exiled.API.Features.Hazards
 {
     using System.Collections.Generic;
@@ -55,19 +57,23 @@ namespace Exiled.API.Features.Hazards
         public override HazardType Type => HazardType.Tantrum;
 
         /// <summary>
-        /// Gets .
+        /// Gets the decay speed.
         /// </summary>
         public float DecaySpeed => Base.DecaySpeed;
 
         /// <summary>
-        /// Gets .
+        /// Gets distance of explode.
         /// </summary>
         public float ExplodeDistance => Base._explodeDistance;
 
         /// <summary>
-        /// Gets .
+        /// Gets or sets the ignored targets.
         /// </summary>
-        public List<ReferenceHub> IgnoredTargets => Base.IgnoredTargets;
+        public IEnumerable<Player> IgnoredTargets
+        {
+            get => Base.IgnoredTargets.Select(Player.Get);
+            set => Base.IgnoredTargets = value.Select(x => x.ReferenceHub).ToList();
+        }
 
         /// <summary>
         /// Gets or sets the synced position.
@@ -109,5 +115,11 @@ namespace Exiled.API.Features.Hazards
 
             return Get<PrismaticCloudHazard>(prismatic);
         }
+
+        /// <summary>
+        /// Enables effects for target.
+        /// </summary>
+        /// <param name="player">Target to affect.</param>
+        public void EnableEffects(Player player) => Base.ServerEnableEffect(player.ReferenceHub);
     }
 }

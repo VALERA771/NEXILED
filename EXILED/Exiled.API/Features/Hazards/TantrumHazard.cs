@@ -1,4 +1,4 @@
-// -----------------------------------------------------------------------
+﻿// -----------------------------------------------------------------------
 // <copyright file="TantrumHazard.cs" company="Exiled Team">
 // Copyright (c) Exiled Team. All rights reserved.
 // Licensed under the CC BY-SA 3.0 license.
@@ -63,7 +63,7 @@ namespace Exiled.API.Features.Hazards
         }
 
         /// <summary>
-        /// Gets .
+        /// Gets the teams that will be affected by the tantrum.
         /// </summary>
         public Team[] TargetedTeams => Base._targetedTeams;
 

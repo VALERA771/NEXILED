@@ -216,8 +216,12 @@ namespace Exiled.API.Enums
         /// <summary>
         /// Makes you a marshmallow guy.
         /// </summary>
-        [Obsolete("Not functional in-game")]
         Marshmallow,
+
+        /// <summary>
+        /// Makes you metal.
+        /// </summary>
+        Metal,
 
         /// <summary>
         /// The effect that is given to the player when getting attacked by SCP-3114's Strangle ability.
