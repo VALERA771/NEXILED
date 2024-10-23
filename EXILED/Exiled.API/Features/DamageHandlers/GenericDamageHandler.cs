@@ -122,6 +122,7 @@ namespace Exiled.API.Features.DamageHandlers
                     Base = new MicroHidDamageHandler(microHidOwner, damage);
                     break;
                 case DamageType.Explosion:
+                case DamageType.SpicyFlame:
                     Base = new ExplosionDamageHandler(attacker.Footprint, UnityEngine.Vector3.zero, damage, 0);
                     break;
                 case DamageType.Firearm:

@@ -5,11 +5,10 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using System.Linq;
-
 namespace Exiled.API.Features.Hazards
 {
     using System.Collections.Generic;
+    using System.Linq;
 
     using Exiled.API.Enums;
     using global::Hazards;
@@ -22,8 +21,6 @@ namespace Exiled.API.Features.Hazards
     /// </summary>
     public class PrismaticCloudHazard : TemporaryHazard
     {
-        private static PrismaticCloud prismaticCloud;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="PrismaticCloudHazard"/> class.
         /// </summary>
@@ -32,20 +29,6 @@ namespace Exiled.API.Features.Hazards
             : base(hazard)
         {
             Base = hazard;
-        }
-
-        /// <summary>
-        /// Gets the prismatic prefab.
-        /// </summary>
-        public static PrismaticCloud PrismaticCloudPrefab
-        {
-            get
-            {
-                if (prismaticCloud == null)
-                    prismaticCloud = PrefabHelper.GetPrefab<PrismaticCloud>(PrefabType.TantrumObj);
-
-                return prismaticCloud;
-            }
         }
 
         /// <summary>
@@ -102,7 +85,7 @@ namespace Exiled.API.Features.Hazards
         /// <returns>The <see cref="TantrumHazard"/> instance.</returns>
         public static PrismaticCloudHazard PlaceTantrum(Vector3 position, bool isActive = true)
         {
-            PrismaticCloud prismatic = Object.Instantiate(PrismaticCloudPrefab);
+            PrismaticCloud prismatic = Object.Instantiate(PrefabHelper.GetPrefab<PrismaticCloud>(PrefabType.PrismaticCloud));
 
             if (!isActive)
                 prismatic.SynchronizedPosition = new(position);
