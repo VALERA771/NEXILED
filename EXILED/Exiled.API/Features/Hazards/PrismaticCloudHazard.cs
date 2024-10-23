@@ -1,5 +1,5 @@
 // -----------------------------------------------------------------------
-// <copyright file="TantrumHazard.cs" company="Exiled Team">
+// <copyright file="PrismaticCloudHazard.cs" company="Exiled Team">
 // Copyright (c) Exiled Team. All rights reserved.
 // Licensed under the CC BY-SA 3.0 license.
 // </copyright>
@@ -7,62 +7,58 @@
 
 namespace Exiled.API.Features.Hazards
 {
+    using System.Collections.Generic;
+
     using Exiled.API.Enums;
     using global::Hazards;
     using Mirror;
-    using PlayerRoles;
     using RelativePositioning;
     using UnityEngine;
 
     /// <summary>
-    /// A wrapper for <see cref="TantrumEnvironmentalHazard"/>.
+    /// A wrapper for <see cref="PrismaticCloud"/>.
     /// </summary>
-    public class TantrumHazard : TemporaryHazard
+    public class PrismaticCloudHazard : TemporaryHazard
     {
-        private static TantrumEnvironmentalHazard tantrumPrefab;
+        private static PrismaticCloud prismaticCloud;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TantrumHazard"/> class.
+        /// Initializes a new instance of the <see cref="PrismaticCloudHazard"/> class.
         /// </summary>
         /// <param name="hazard">The <see cref="TantrumEnvironmentalHazard"/> instance.</param>
-        public TantrumHazard(TantrumEnvironmentalHazard hazard)
+        public PrismaticCloudHazard(PrismaticCloud hazard)
             : base(hazard)
         {
             Base = hazard;
         }
 
         /// <summary>
-        /// Gets the tantrum prefab.
+        /// Gets the prismatic prefab.
         /// </summary>
-        public static TantrumEnvironmentalHazard TantrumPrefab
+        public static PrismaticCloud PrismaticCloudPrefab
         {
             get
             {
-                if (tantrumPrefab == null)
-                    tantrumPrefab = PrefabHelper.GetPrefab<TantrumEnvironmentalHazard>(PrefabType.TantrumObj);
+                if (prismaticCloud == null)
+                    prismaticCloud = PrefabHelper.GetPrefab<PrismaticCloud>(PrefabType.TantrumObj);
 
-                return tantrumPrefab;
+                return prismaticCloud;
             }
         }
 
         /// <summary>
-        /// Gets the <see cref="TantrumEnvironmentalHazard"/>.
+        /// Gets the <see cref="PrismaticCloud"/>.
         /// </summary>
-        public new TantrumEnvironmentalHazard Base { get; }
+        public new PrismaticCloud Base { get; }
 
         /// <inheritdoc />
         public override HazardType Type => HazardType.Tantrum;
 
-        /// <summary>
-        /// Gets or sets a value indicating whether or not sizzle should be played.
-        /// </summary>
-        public bool PlaySizzle
-        {
-            get => Base.PlaySizzle;
-            set => Base.PlaySizzle = value;
-        }
+        public float DecaySpeed => Base.DecaySpeed;
 
-        public Team[] TargetedTeams => Base._targetedTeams;
+        public float ExplodeDistance => Base._explodeDistance;
+
+        public List<ReferenceHub> IgnoredTargets => Base.IgnoredTargets;
 
         /// <summary>
         /// Gets or sets the synced position.
@@ -83,26 +79,26 @@ namespace Exiled.API.Features.Hazards
         }
 
         /// <summary>
-        /// Places a Tantrum (SCP-173's ability) in the indicated position.
+        /// Places a Prismatic (Halloween's ability) in the indicated position.
         /// </summary>
         /// <param name="position">The position where you want to spawn the Tantrum.</param>
-        /// <param name="isActive">Whether or not the tantrum will apply the <see cref="EffectType.Stained"/> effect.</param>
+        /// <param name="isActive">Whether or not the tantrum will apply the <see cref="EffectType.Prismatic"/> effect.</param>
         /// <remarks>If <paramref name="isActive"/> is <see langword="true"/>, the tantrum is moved slightly up from its original position. Otherwise, the collision will not be detected and the slowness will not work.</remarks>
         /// <returns>The <see cref="TantrumHazard"/> instance.</returns>
-        public static TantrumHazard PlaceTantrum(Vector3 position, bool isActive = true)
+        public static PrismaticCloud PlaceTantrum(Vector3 position, bool isActive = true)
         {
-            TantrumEnvironmentalHazard tantrum = Object.Instantiate(TantrumPrefab);
+            PrismaticCloud prismatic = Object.Instantiate(PrismaticCloudPrefab);
 
             if (!isActive)
-                tantrum.SynchronizedPosition = new(position);
+                prismatic.SynchronizedPosition = new(position);
             else
-                tantrum.SynchronizedPosition = new(position + (Vector3.up * 0.25f));
+                prismatic.SynchronizedPosition = new(position + (Vector3.up * 0.25f));
 
-            tantrum._destroyed = !isActive;
+            prismatic._destroyed = !isActive;
 
-            NetworkServer.Spawn(tantrum.gameObject);
+            NetworkServer.Spawn(prismatic.gameObject);
 
-            return Get<TantrumHazard>(tantrum);
+            return Get<PrismaticCloud>(prismatic);
         }
     }
 }
