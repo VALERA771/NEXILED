@@ -73,6 +73,15 @@ namespace Exiled.API.Extensions
             { EffectType.FogControl, typeof(FogControl) },
             { EffectType.Slowness, typeof(Slowness) },
             { EffectType.Metal, typeof(Metal) },
+            { EffectType.OrangeCandy, typeof(OrangeCandy) },
+            { EffectType.Prismatic, typeof(Prismatic) },
+            { EffectType.SlowMetabolism, typeof(SlowMetabolism) },
+            { EffectType.Spicy, typeof(Spicy) },
+            { EffectType.SugarCrave, typeof(SugarCrave) },
+            { EffectType.SugarHigh, typeof(SugarHigh) },
+            { EffectType.SugarRush, typeof(SugarRush) },
+            { EffectType.TemporaryBypass, typeof(TemporaryBypass) },
+            { EffectType.TraumatizedByEvil, typeof(TraumatizedByEvil) },
         });
 
         /// <summary>

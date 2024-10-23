@@ -249,5 +249,20 @@ namespace Exiled.API.Enums
         /// Damage caused by the marshmallow man.
         /// </summary>
         Marshmallow,
+
+        /// <summary>
+        /// .
+        /// </summary>
+        Silent,
+
+        /// <summary>
+        /// .
+        /// </summary>
+        SpicyFlame,
+
+        /// <summary>
+        /// .
+        /// </summary>
+        MetalPipe,
     }
 }

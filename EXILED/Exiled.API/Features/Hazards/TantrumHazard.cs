@@ -1,4 +1,4 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 // <copyright file="TantrumHazard.cs" company="Exiled Team">
 // Copyright (c) Exiled Team. All rights reserved.
 // Licensed under the CC BY-SA 3.0 license.
@@ -10,6 +10,7 @@ namespace Exiled.API.Features.Hazards
     using Exiled.API.Enums;
     using global::Hazards;
     using Mirror;
+    using PlayerRoles;
     using RelativePositioning;
     using UnityEngine;
 
@@ -60,6 +61,11 @@ namespace Exiled.API.Features.Hazards
             get => Base.PlaySizzle;
             set => Base.PlaySizzle = value;
         }
+
+        /// <summary>
+        /// Gets .
+        /// </summary>
+        public Team[] TargetedTeams => Base._targetedTeams;
 
         /// <summary>
         /// Gets or sets the synced position.

@@ -3747,6 +3747,11 @@ namespace Exiled.API.Features
         /// <summary>
         /// Explode the player.
         /// </summary>
+        public void ExplodeHalloween() => ExplosionUtils.ServerExplode(ReferenceHub, true);
+
+        /// <summary>
+        /// Explode the player.
+        /// </summary>
         /// <param name="projectileType">The projectile that will create the explosion.</param>
         /// <param name="attacker">The Player that will causing the explosion.</param>
         public void Explode(ProjectileType projectileType, Player attacker = null) => Map.Explode(Position, projectileType, attacker);
@@ -3756,6 +3761,12 @@ namespace Exiled.API.Features
         /// </summary>
         /// <param name="projectileType">The projectile that will create the effect.</param>
         public void ExplodeEffect(ProjectileType projectileType) => Map.ExplodeEffect(Position, projectileType);
+
+        /// <summary>
+        /// .
+        /// </summary>
+        /// <param name="intensity">intensity.</param>
+        public void ShakeCameraHalloween(float intensity) => referenceHub.connectionToClient.Send(new ShakeCameraMessage(intensity / 100f), 0);
 
         /// <summary>
         /// Converts the player in a human-readable format.
