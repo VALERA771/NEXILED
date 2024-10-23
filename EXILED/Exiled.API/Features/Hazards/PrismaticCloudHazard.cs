@@ -54,10 +54,19 @@ namespace Exiled.API.Features.Hazards
         /// <inheritdoc />
         public override HazardType Type => HazardType.Tantrum;
 
+        /// <summary>
+        /// Gets .
+        /// </summary>
         public float DecaySpeed => Base.DecaySpeed;
 
+        /// <summary>
+        /// Gets .
+        /// </summary>
         public float ExplodeDistance => Base._explodeDistance;
 
+        /// <summary>
+        /// Gets .
+        /// </summary>
         public List<ReferenceHub> IgnoredTargets => Base.IgnoredTargets;
 
         /// <summary>
@@ -85,7 +94,7 @@ namespace Exiled.API.Features.Hazards
         /// <param name="isActive">Whether or not the tantrum will apply the <see cref="EffectType.Prismatic"/> effect.</param>
         /// <remarks>If <paramref name="isActive"/> is <see langword="true"/>, the tantrum is moved slightly up from its original position. Otherwise, the collision will not be detected and the slowness will not work.</remarks>
         /// <returns>The <see cref="TantrumHazard"/> instance.</returns>
-        public static PrismaticCloud PlaceTantrum(Vector3 position, bool isActive = true)
+        public static PrismaticCloudHazard PlaceTantrum(Vector3 position, bool isActive = true)
         {
             PrismaticCloud prismatic = Object.Instantiate(PrismaticCloudPrefab);
 
@@ -98,7 +107,7 @@ namespace Exiled.API.Features.Hazards
 
             NetworkServer.Spawn(prismatic.gameObject);
 
-            return Get<PrismaticCloud>(prismatic);
+            return Get<PrismaticCloudHazard>(prismatic);
         }
     }
 }
