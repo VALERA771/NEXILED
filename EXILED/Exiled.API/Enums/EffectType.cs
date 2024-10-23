@@ -240,8 +240,48 @@ namespace Exiled.API.Enums
         Slowness,
 
         /// <summary>
-        /// Makes player metal.
+        /// <see cref="CustomPlayerEffects.OrangeCandy"/>
         /// </summary>
-        Metal,
+        OrangeCandy,
+
+        /// <summary>
+        /// <see cref="CustomPlayerEffects.Prismatic"/>
+        /// </summary>
+        Prismatic,
+
+        /// <summary>
+        /// <see cref="CustomPlayerEffects.SlowMetabolism"/>
+        /// </summary>
+        SlowMetabolism,
+
+        /// <summary>
+        /// <see cref="CustomPlayerEffects.Spicy"/>
+        /// </summary>
+        Spicy,
+
+        /// <summary>
+        /// <see cref="CustomPlayerEffects.SugarCrave"/>
+        /// </summary>
+        SugarCrave,
+
+        /// <summary>
+        /// <see cref="CustomPlayerEffects.SugarHigh"/>
+        /// </summary>
+        SugarHigh,
+
+        /// <summary>
+        /// <see cref="CustomPlayerEffects.SugarRush"/>
+        /// </summary>
+        SugarRush,
+
+        /// <summary>
+        /// <see cref="CustomPlayerEffects.TemporaryBypass"/>
+        /// </summary>
+        TemporaryBypass,
+
+        /// <summary>
+        /// <see cref="CustomPlayerEffects.TraumatizedByEvil"/>
+        /// </summary>
+        TraumatizedByEvil,
     }
 }
