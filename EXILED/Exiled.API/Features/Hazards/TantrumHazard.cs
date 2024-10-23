@@ -62,6 +62,9 @@ namespace Exiled.API.Features.Hazards
             set => Base.PlaySizzle = value;
         }
 
+        /// <summary>
+        /// Gets .
+        /// </summary>
         public Team[] TargetedTeams => Base._targetedTeams;
 
         /// <summary>

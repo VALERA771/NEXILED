@@ -402,6 +402,19 @@ namespace Exiled.API.Features
         }
 
         /// <summary>
+        /// Spawn projectile effect HalloweenOnly.
+        /// </summary>
+        /// <param name="position">The position where effect will be created.</param>
+        /// <param name="projectileType">The projectile that will create the effect.</param>
+        public static void ExplodeEffectHalloween(Vector3 position, ProjectileType projectileType)
+        {
+            ItemType item;
+            if ((item = projectileType.GetItemType()) is ItemType.None)
+                return;
+            ExplosionUtils.ServerSpawnEffect(position, item, true);
+        }
+
+        /// <summary>
         /// Plays a gun sound at the specified position.
         /// </summary>
         /// <param name="position">Position to play the sound at.</param>
