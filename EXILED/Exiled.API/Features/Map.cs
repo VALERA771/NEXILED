@@ -129,6 +129,15 @@ namespace Exiled.API.Features
         public static SqueakSpawner SqueakSpawner => squeakSpawner ??= Object.FindObjectOfType<SqueakSpawner>();
 
         /// <summary>
+        /// Gets or sets a value indicating whether the hubert sky is enabled.
+        /// </summary>
+        public static bool IsHubertSky
+        {
+            get => SkyboxHubert._singleton.Hubert;
+            set => SkyboxHubert._singleton.NetworkHubert = value;
+        }
+
+        /// <summary>
         /// Broadcasts a message to all <see cref="Player">players</see>.
         /// </summary>
         /// <param name="broadcast">The <see cref="Features.Broadcast"/> to be broadcasted.</param>
