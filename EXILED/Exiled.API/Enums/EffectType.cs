@@ -219,11 +219,6 @@ namespace Exiled.API.Enums
         Marshmallow,
 
         /// <summary>
-        /// Makes you metal.
-        /// </summary>
-        Metal,
-
-        /// <summary>
         /// The effect that is given to the player when getting attacked by SCP-3114's Strangle ability.
         /// </summary>
         Strangled,
@@ -293,5 +288,10 @@ namespace Exiled.API.Enums
         /// <see cref="CustomPlayerEffects.OrangeWitness"/>
         /// </summary>
         OrangeWitness,
+
+        /// <summary>
+        /// Makes you metal.
+        /// </summary>
+        Metal,
     }
 }
