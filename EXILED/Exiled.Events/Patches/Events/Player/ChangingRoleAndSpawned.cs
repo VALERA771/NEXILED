@@ -153,7 +153,7 @@ namespace Exiled.Events.Patches.Events.Player
 
             newInstructions.InsertRange(
                 newInstructions.Count - 1,
-                new[]
+                new CodeInstruction[]
                 {
                     // if (this.isLocalPlayer)
                     //     return;
@@ -162,7 +162,7 @@ namespace Exiled.Events.Patches.Events.Player
                     new(OpCodes.Brtrue_S, returnLabel),
 
                     // player
-                    new CodeInstruction(OpCodes.Ldloc_S, player.LocalIndex).WithLabels(skip),
+                    new(OpCodes.Ldloc_S, player.LocalIndex),
 
                     // OldRole
                     new(OpCodes.Ldloc_0),
@@ -181,14 +181,6 @@ namespace Exiled.Events.Patches.Events.Player
 
             ListPool<CodeInstruction>.Pool.Return(newInstructions);
         }
-
-        private static void LogPlayer(API.Features.Player player)
-        {
-            Log.Warn(player == null);
-            Log.Warn(ReferenceHub.LocalHub == null);
-            Log.Warn(player?.ReferenceHub == ReferenceHub.LocalHub);
-        }
-
         private static void UpdatePlayerRole(RoleTypeId newRole, API.Features.Player player)
         {
             if (newRole is RoleTypeId.Scp173)
