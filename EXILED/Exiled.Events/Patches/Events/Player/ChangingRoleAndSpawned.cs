@@ -181,6 +181,7 @@ namespace Exiled.Events.Patches.Events.Player
 
             ListPool<CodeInstruction>.Pool.Return(newInstructions);
         }
+
         private static void UpdatePlayerRole(RoleTypeId newRole, API.Features.Player player)
         {
             if (newRole is RoleTypeId.Scp173)
