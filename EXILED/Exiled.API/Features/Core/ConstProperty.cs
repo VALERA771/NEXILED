@@ -24,8 +24,12 @@ namespace Exiled.API.Features.Core
     public class ConstProperty<T>
         where T : IEquatable<T>
     {
-        private static Harmony harmony = new($"Exiled.API-{typeof(T).Name}");
-        private static HarmonyMethod patchMethod = new(typeof(ConstProperty<T>), nameof(Transpiler));
+        /// <summary>
+        /// Gets the list of all <see cref="ConstProperty{T}"/>.
+        /// </summary>
+        internal static readonly List<ConstProperty<T>> List = new();
+
+        private static readonly Harmony Harmony = new($"Exiled.API-{typeof(T).Name}");
 
         private readonly IEnumerable<MethodInfo> skipMethods;
         private readonly Type type;
@@ -34,11 +38,6 @@ namespace Exiled.API.Features.Core
 
         private T value;
         private bool patched;
-
-        /// <summary>
-        /// Gets the list of all <see cref="ConstProperty{T}"/>.
-        /// </summary>
-        internal static readonly List<ConstProperty<T>> List = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConstProperty{T}"/> class.
@@ -105,7 +104,7 @@ namespace Exiled.API.Features.Core
 
                 try
                 {
-                     returnInfo = harmony.Patch(method, transpiler: patchMethod);
+                     returnInfo = Harmony.Patch(method, transpiler: new(typeof(ConstProperty<T>), nameof(Transpiler)));
                 }
                 catch (HarmonyException exception)
                 {
@@ -125,7 +124,7 @@ namespace Exiled.API.Features.Core
         public void Repatch()
         {
             foreach (MethodInfo method in MethodsToPatch)
-                harmony.Unpatch(method, PatchedMethods.First(x => x.Name.Contains(method.Name)));
+                Harmony.Unpatch(method, PatchedMethods.First(x => x.Name.Contains(method.Name)));
 
             patchedMethods = Patch();
         }
