@@ -5,9 +5,9 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace Exiled.CustomRoles.API.Features
+namespace Exiled.CustomUnits.API.Features
 {
-    using Exiled.CustomRoles.API.Features.Enums;
+    using Exiled.CustomRoles.API.Features;
     using PlayerRoles;
 
     /// <summary>
