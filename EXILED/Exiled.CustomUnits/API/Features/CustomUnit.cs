@@ -20,7 +20,9 @@ namespace Exiled.CustomUnits.API.Features
     using Exiled.API.Interfaces;
     using Exiled.CustomItems.API.Features;
     using Exiled.CustomUnits.API.Features.Enums;
+    using Exiled.Events.EventArgs.Interfaces;
     using Exiled.Events.EventArgs.Player;
+    using Exiled.Events.EventArgs.Server;
     using MEC;
     using PlayerRoles;
     using Respawning;
@@ -84,7 +86,12 @@ namespace Exiled.CustomUnits.API.Features
         public virtual float MinimumTickets { get; set; } = 50f;
 
         /// <summary>
-        /// Gets or sets the amount of maximum tickets that will be subtracted from <see cref="CurrentTickets"/> when this unit spawns..
+        /// Gets or sets a predicate that checks if an event can add tickets to this unit.
+        /// </summary>
+        public virtual Func<IExiledEvent, bool> CheckGrant { get; set; } = _ => true;
+
+        /// <summary>
+        /// Gets or sets the amount of maximum tickets that will be subtracted from <see cref="CurrentTickets"/> when this unit spawns.
         /// </summary>
         public virtual float ReduceAmount { get; set; } = 30f;
 
@@ -267,9 +274,10 @@ namespace Exiled.CustomUnits.API.Features
         /// <summary>
         /// Forces a <see cref="CustomUnit"/> to spawn.
         /// </summary>
-        public void Spawn()
+        /// <param name="players">Players that will be spawned.</param>
+        public void Spawn(IEnumerable<Player>? players = null)
         {
-            IList<Player> playerToSpawn = Player.List.Where(x => RespawnManager.Singleton.CheckSpawnable(x.ReferenceHub)).ToArray();
+            IList<Player> playerToSpawn = (players ?? Player.List.Where(x => RespawnManager.Singleton.CheckSpawnable(x.ReferenceHub))).ToArray();
 
             if (playerToSpawn.Count < MinimumToSpawn)
                 return;
@@ -433,6 +441,9 @@ namespace Exiled.CustomUnits.API.Features
         /// </summary>
         protected virtual void SubscribeEvents()
         {
+            Events.Handlers.Server.RespawningTeam += OnInternalRespawningTeam;
+            Events.Handlers.Player.Shot += OnInternalShot;
+            Events.Handlers.Player.ChangingRole += OnInternalChangingRole;
         }
 
         /// <summary>
@@ -440,6 +451,9 @@ namespace Exiled.CustomUnits.API.Features
         /// </summary>
         protected virtual void UnsubscribeEvents()
         {
+            Events.Handlers.Server.RespawningTeam -= OnInternalRespawningTeam;
+            Events.Handlers.Player.Shot -= OnInternalShot;
+            Events.Handlers.Player.ChangingRole -= OnInternalChangingRole;
         }
 
         /// <summary>
@@ -460,6 +474,14 @@ namespace Exiled.CustomUnits.API.Features
         {
         }
 
+        /// <summary>
+        /// Fired when unit is respawning.
+        /// </summary>
+        /// <param name="players">Players that will be respawned.</param>
+        protected virtual void OnRespawning(IEnumerable<Player> players)
+        {
+        }
+
         private void OnInternalShot(ShotEventArgs ev)
         {
             if (ev.Target == null || !Check(ev.Player))
@@ -475,6 +497,34 @@ namespace Exiled.CustomUnits.API.Features
 
             if (!canDamage)
                 ev.Damage = 0;
+        }
+
+        private void OnInternalRespawningTeam(RespawningTeamEventArgs ev)
+        {
+            if (SpawnType == SpawnType.None)
+                return;
+
+            if (SpawnType == SpawnType.Ticket && CurrentTickets >= MinimumTickets)
+            {
+                CurrentTickets = Math.Max(0, CurrentTickets - ReduceAmount);
+                Spawn(ev.Players);
+                OnRespawning(ev.Players);
+            }
+
+            if (SpawnType == SpawnType.Chance && UnityEngine.Random.value * 100 <= SpawnChance)
+            {
+                Spawn(ev.Players);
+                OnRespawning(ev.Players);
+            }
+        }
+
+        private void OnInternalChangingRole(ChangingRoleEventArgs ev)
+        {
+            if (Check(ev.Player))
+            {
+                TrackedPlayers.Remove(ev.Player);
+                Destroy();
+            }
         }
     }
 }
