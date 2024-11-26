@@ -5,8 +5,6 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using Respawning.Waves;
-
 namespace Exiled.Events.Patches.Events.Map
 {
     using System.Collections.Generic;

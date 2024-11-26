@@ -5,8 +5,6 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using InventorySystem.Items;
-
 namespace Exiled.Events.Patches.Events.Map
 {
     using System.Collections.Generic;
@@ -18,6 +16,7 @@ namespace Exiled.Events.Patches.Events.Map
     using Exiled.Events.EventArgs.Map;
     using Handlers;
     using HarmonyLib;
+    using InventorySystem.Items;
     using InventorySystem.Items.Firearms.Modules;
     using UnityEngine;
 

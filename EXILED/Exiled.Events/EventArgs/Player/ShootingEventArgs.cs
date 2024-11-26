@@ -35,14 +35,12 @@ namespace Exiled.Events.EventArgs.Player
         /// <param name="firearm">
         /// <inheritdoc cref="Firearm" />
         /// </param>
-        /// <param name="msg">
-        /// <inheritdoc cref="ShotMessage" />
-        /// </param>
         public ShootingEventArgs(Player shooter, BaseFirearm firearm)
         {
             Player = shooter;
             Firearm = Item.Get(firearm).As<Firearm>();
-            //ShotMessage = msg;
+
+            // ShotMessage = msg;
         }
 
         /// <summary>

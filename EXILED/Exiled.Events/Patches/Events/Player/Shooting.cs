@@ -24,10 +24,11 @@ namespace Exiled.Events.Patches.Events.Player
     using static HarmonyLib.AccessTools;
 
     /// <summary>
-    /// Patches <see cref="FirearmBasicMessagesHandler.ServerShotReceived" />.
+    /// Patches <see cref="Player" />.
     /// Adds the <see cref="Handlers.Player.Shooting" /> events.
     /// </summary>
     [EventPatch(typeof(Handlers.Player), nameof(Handlers.Player.Shooting))]
+
     // [HarmonyPatch(typeof(FirearmBasicMessagesHandler), nameof(FirearmBasicMessagesHandler.ServerShotReceived))]
     internal static class Shooting
     {
