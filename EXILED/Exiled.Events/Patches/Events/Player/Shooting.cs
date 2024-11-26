@@ -28,9 +28,10 @@ namespace Exiled.Events.Patches.Events.Player
     /// Adds the <see cref="Handlers.Player.Shooting" /> events.
     /// </summary>
     [EventPatch(typeof(Handlers.Player), nameof(Handlers.Player.Shooting))]
-    [HarmonyPatch(typeof(FirearmBasicMessagesHandler), nameof(FirearmBasicMessagesHandler.ServerShotReceived))]
+    // [HarmonyPatch(typeof(FirearmBasicMessagesHandler), nameof(FirearmBasicMessagesHandler.ServerShotReceived))]
     internal static class Shooting
     {
+        /*
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             List<CodeInstruction> newInstructions = ListPool<CodeInstruction>.Pool.Get(instructions);
@@ -85,5 +86,6 @@ namespace Exiled.Events.Patches.Events.Player
 
             ListPool<CodeInstruction>.Pool.Return(newInstructions);
         }
+        */
     }
 }

@@ -5,6 +5,8 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using InventorySystem.Items;
+
 namespace Exiled.Events.Patches.Events.Map
 {
     using System.Collections.Generic;
@@ -47,7 +49,7 @@ namespace Exiled.Events.Patches.Events.Map
                     // this.Firearm
                     new(OpCodes.Ldarg_0),
                     new(OpCodes.Callvirt, PropertyGetter(typeof(ImpactEffectsModule), nameof(ImpactEffectsModule.Firearm))),
-                    new(OpCodes.Call, Method(typeof(API.Features.Items.Item), nameof(API.Features.Items.Item.Get))),
+                    new(OpCodes.Call, Method(typeof(API.Features.Items.Item), nameof(API.Features.Items.Item.Get), new[] { typeof(ItemBase) })),
 
                     // hit
                     new(OpCodes.Ldarg_2),
