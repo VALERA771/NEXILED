@@ -13,6 +13,7 @@ namespace Exiled.Events
     using API.Enums;
     using API.Features;
     using CentralAuth;
+    using Exiled.API.Features.Core.UserSettings;
     using Exiled.Events.Features;
     using HarmonyLib;
     using InventorySystem.Items.Pickups;
@@ -23,6 +24,7 @@ namespace Exiled.Events
     using PluginAPI.Events;
     using Respawning;
     using UnityEngine.SceneManagement;
+    using UserSettings.ServerSpecific;
 
     /// <summary>
     /// Patch and unpatch events into the game.
