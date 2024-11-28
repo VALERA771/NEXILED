@@ -96,7 +96,7 @@ namespace Exiled.Events.Handlers.Internal
         {
             RoleAssigner.CheckLateJoin(ev.Player.ReferenceHub, ClientInstanceMode.ReadyClient);
 
-            if (SettingBase.SyncOnJoin(ev.Player))
+            if (SettingBase.SyncOnJoin != null && SettingBase.SyncOnJoin(ev.Player))
                 SettingBase.SendToPlayer(ev.Player);
 
             // TODO: Remove if this has been fixed for https://git.scpslgame.com/northwood-qa/scpsl-bug-reporting/-/issues/52
