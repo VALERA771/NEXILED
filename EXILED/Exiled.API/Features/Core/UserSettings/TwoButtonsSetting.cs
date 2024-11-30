@@ -7,6 +7,8 @@
 
 namespace Exiled.API.Features.Core.UserSettings
 {
+    using System;
+
     using global::UserSettings.ServerSpecific;
 
     /// <summary>
@@ -23,8 +25,10 @@ namespace Exiled.API.Features.Core.UserSettings
         /// <param name="secondOption"><inheritdoc cref="SecondOption"/></param>
         /// <param name="defaultIsSecond"><inheritdoc cref="IsSecondDefalut"/></param>
         /// <param name="hintDescription"><inheritdoc cref="SettingBase.HintDescription"/></param>
-        public TwoButtonsSetting(int id, string label, string firstOption, string secondOption, bool defaultIsSecond = false, string hintDescription = "")
-            : this(new SSTwoButtonsSetting(id, label, firstOption, secondOption, defaultIsSecond, hintDescription))
+        /// <param name="header"><inheritdoc cref="SettingBase.Header"/></param>
+        /// <param name="onChanged"><inheritdoc cref="SettingBase.OnChanged"/></param>
+        public TwoButtonsSetting(int id, string label, string firstOption, string secondOption, bool defaultIsSecond = false, string hintDescription = "", HeaderSetting header = null, Action<Player, SettingBase> onChanged = null)
+            : base(new SSTwoButtonsSetting(id, label, firstOption, secondOption, defaultIsSecond, hintDescription), header, onChanged)
         {
         }
 
