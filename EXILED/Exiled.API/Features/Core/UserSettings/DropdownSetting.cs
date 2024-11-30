@@ -14,7 +14,7 @@ namespace Exiled.API.Features.Core.UserSettings
     using global::UserSettings.ServerSpecific;
 
     /// <summary>
-    /// A class.
+    /// Represents a dropdown setting.
     /// </summary>
     public class DropdownSetting : SettingBase
     {
@@ -26,6 +26,14 @@ namespace Exiled.API.Features.Core.UserSettings
             : base(settingBase)
         {
             Base = settingBase;
+
+            SettingBase parent = Settings.Find(x => x.Id == settingBase.SettingId);
+
+            if (parent != null)
+            {
+                Header = parent.Header;
+                OnChanged = parent.OnChanged;
+            }
         }
 
         /// <summary>

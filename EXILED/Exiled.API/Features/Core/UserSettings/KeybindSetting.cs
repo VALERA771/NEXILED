@@ -22,7 +22,7 @@ namespace Exiled.API.Features.Core.UserSettings
         /// </summary>
         /// <param name="id"><inheritdoc cref="SettingBase.Id"/></param>
         /// <param name="label"><inheritdoc cref="SettingBase.Label"/></param>
-        /// <param name="suggested"><inheritdoc cref="SuggestedKey"/></param>
+        /// <param name="suggested"><inheritdoc cref="KeyCode"/></param>
         /// <param name="preventInteractionOnGUI"><inheritdoc cref="PreventInteractionOnGUI"/></param>
         /// <param name="hintDescription"><inheritdoc cref="SettingBase.HintDescription"/></param>
         /// <param name="header"><inheritdoc cref="SettingBase.Header"/></param>
@@ -40,6 +40,14 @@ namespace Exiled.API.Features.Core.UserSettings
             : base(settingBase)
         {
             Base = settingBase;
+
+            SettingBase parent = Settings.Find(x => x.Id == settingBase.SettingId);
+
+            if (parent != null)
+            {
+                Header = parent.Header;
+                OnChanged = parent.OnChanged;
+            }
         }
 
         /// <summary>
@@ -62,21 +70,12 @@ namespace Exiled.API.Features.Core.UserSettings
         }
 
         /// <summary>
-        /// Gets or sets the suggested key.
-        /// </summary>
-        public KeyCode SuggestedKey
-        {
-            get => Base.SuggestedKey;
-            set => Base.SuggestedKey = value;
-        }
-
-        /// <summary>
-        /// Gets or sets the key.
+        /// Gets or sets the assigned key.
         /// </summary>
         public KeyCode KeyCode
         {
-            get => Base.AssignedKeyCode;
-            set => Base.AssignedKeyCode = value;
+            get => Base.SuggestedKey;
+            set => Base.SuggestedKey = value;
         }
     }
 }

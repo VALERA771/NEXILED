@@ -40,6 +40,14 @@ namespace Exiled.API.Features.Core.UserSettings
             : base(settingBase)
         {
             Base = settingBase;
+
+            SettingBase parent = Settings.Find(x => x.Id == settingBase.SettingId);
+
+            if (parent != null)
+            {
+                Header = parent.Header;
+                OnChanged = parent.OnChanged;
+            }
         }
 
         /// <inheritdoc cref="SettingBase.Base" />

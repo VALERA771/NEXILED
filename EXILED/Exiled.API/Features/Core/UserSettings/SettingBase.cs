@@ -25,9 +25,12 @@ namespace Exiled.API.Features.Core.UserSettings
         /// <summary>
         /// A <see cref="Dictionary{TKey,TValue}"/> that contains <see cref="SettingBase"/> that were received by a players.
         /// </summary>
-        private static readonly Dictionary<Player, List<SettingBase>> ReceivedSettings = new();
+        internal static readonly Dictionary<Player, List<SettingBase>> ReceivedSettings = new();
 
-        private static readonly List<SettingBase> Settings = new();
+        /// <summary>
+        /// A collection that contains all settings that were sent to clients.
+        /// </summary>
+        internal static readonly List<SettingBase> Settings = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SettingBase"/> class.
@@ -192,29 +195,27 @@ namespace Exiled.API.Features.Core.UserSettings
         /// <param name="settings">A collection of settings to register.</param>
         /// <param name="predicate">A requirement to meet when sending settings to players.</param>
         /// <returns>A <see cref="IEnumerable{T}"/> of <see cref="SettingBase"/> instances that were successfully registered.</returns>
-        public static IEnumerable<SettingBase> RegisterAll(IEnumerable<SettingBase> settings, Func<Player, bool> predicate = null)
+        public static IEnumerable<SettingBase> Register(IEnumerable<SettingBase> settings, Func<Player, bool> predicate = null)
         {
             List<SettingBase> list = ListPool<SettingBase>.Pool.Get(settings);
             List<SettingBase> list2 = ListPool<SettingBase>.Pool.Get();
 
-            Log.Warn(list.Count);
-
             while (list.Exists(x => x.Header != null))
             {
                 SettingBase setting = list.Find(x => x.Header != null);
-                List<SettingBase> range = list.FindAll(x => x.Header.Id == setting.Header.Id);
+                SettingBase header = list.Find(x => x == setting.Header);
+                List<SettingBase> range = list.FindAll(x => x.Header?.Id == setting.Header.Id);
 
+                list2.Add(header);
                 list2.AddRange(range);
 
-                list.RemoveAll(x => x.Header.Id == setting.Header.Id);
+                list.Remove(header);
+                list.RemoveAll(x => x.Header?.Id == setting.Header.Id);
             }
-
-            Log.Warn(list.Count);
-            Log.Warn(list2.Count);
 
             list2.AddRange(list);
 
-            List<ServerSpecificSettingBase> list3 = ListPool<ServerSpecificSettingBase>.Pool.Get(ServerSpecificSettingsSync.DefinedSettings);
+            List<ServerSpecificSettingBase> list3 = ListPool<ServerSpecificSettingBase>.Pool.Get(ServerSpecificSettingsSync.DefinedSettings ?? Array.Empty<ServerSpecificSettingBase>());
             list3.AddRange(list2.Select(x => x.Base));
 
             ServerSpecificSettingsSync.DefinedSettings = list3.ToArray();
@@ -239,7 +240,7 @@ namespace Exiled.API.Features.Core.UserSettings
         /// <param name="predicate">Determines which players will receive this update.</param>
         /// <param name="settings">Settings to remove. If <c>null</c>, all settings will be removed.</param>
         /// <returns>A <see cref="IEnumerable{T}"/> of <see cref="SettingBase"/> instances that were successfully removed.</returns>
-        public static IEnumerable<SettingBase> UnregisterAll(Func<Player, bool> predicate = null, IEnumerable<SettingBase> settings = null)
+        public static IEnumerable<SettingBase> Unregister(Func<Player, bool> predicate = null, IEnumerable<SettingBase> settings = null)
         {
             List<ServerSpecificSettingBase> list = ListPool<ServerSpecificSettingBase>.Pool.Get(ServerSpecificSettingsSync.DefinedSettings);
             List<SettingBase> list2 = ListPool<SettingBase>.Pool.Get((settings ?? Settings).Where(setting => list.Remove(setting.Base)));
@@ -265,7 +266,7 @@ namespace Exiled.API.Features.Core.UserSettings
         /// <param name="settingBase">A new updated setting.</param>
         internal static void OnSettingUpdated(ReferenceHub hub, ServerSpecificSettingBase settingBase)
         {
-            if (!Player.TryGet(hub, out Player player))
+            if (!Player.TryGet(hub, out Player player) || hub.IsHost)
                 return;
 
             SettingBase setting;
@@ -274,17 +275,17 @@ namespace Exiled.API.Features.Core.UserSettings
             {
                 setting = Create(settingBase);
                 ReceivedSettings.Add(player, new() { setting });
+                return;
             }
-            else if (!list.Exists(x => x.Id == settingBase.SettingId))
+
+            if (!list.Exists(x => x.Id == settingBase.SettingId))
             {
                 setting = Create(settingBase);
                 list.Add(setting);
-            }
-            else
-            {
-                setting = list.Find(x => x.Id == settingBase.SettingId);
+                return;
             }
 
+            setting = list.Find(x => x.Id == settingBase.SettingId);
             setting.OriginalDefinition.OnChanged?.Invoke(player, setting);
         }
     }

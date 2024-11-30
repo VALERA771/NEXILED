@@ -31,8 +31,6 @@ namespace Exiled.Events.Handlers.Internal
     using PlayerRoles.RoleAssign;
     using Utils.NonAllocLINQ;
 
-    using Utils.NonAllocLINQ;
-
     /// <summary>
     /// Handles some round clean-up events and some others related to players.
     /// </summary>
