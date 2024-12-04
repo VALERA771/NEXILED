@@ -145,6 +145,10 @@ namespace Exiled.API.Features.Core.UserSettings
         /// </summary>
         /// <param name="settingBase">A <see cref="ServerSpecificSettingBase"/> instance.</param>
         /// <returns>A new instance of this setting.</returns>
+        /// <remarks>
+        /// This method is used only to create a new instance of <see cref="SettingBase"/> from an existing <see cref="ServerSpecificSettingBase"/> instance.
+        /// New setting won't be synced with players.
+        /// </remarks>
         public static SettingBase Create(ServerSpecificSettingBase settingBase) => settingBase switch
         {
             SSButton button => new ButtonSetting(button),
@@ -162,6 +166,10 @@ namespace Exiled.API.Features.Core.UserSettings
         /// <param name="settingBase">A<see cref="ServerSpecificSettingBase"/> instance.</param>
         /// <typeparam name="T">Type of the setting.</typeparam>
         /// <returns>A new instance of this setting.</returns>
+        /// <remarks>
+        /// This method is used only to create a new instance of <see cref="SettingBase"/> from an existing <see cref="ServerSpecificSettingBase"/> instance.
+        /// New setting won't be synced with players.
+        /// </remarks>
         public static T Create<T>(ServerSpecificSettingBase settingBase)
             where T : SettingBase => (T)Create(settingBase);
 
@@ -190,11 +198,12 @@ namespace Exiled.API.Features.Core.UserSettings
         public static void SendToPlayer(Player player) => ServerSpecificSettingsSync.SendToPlayer(player.ReferenceHub);
 
         /// <summary>
-        /// Registers all settings from the specified assembly.
+        /// Registers all settings from the specified collection.
         /// </summary>
         /// <param name="settings">A collection of settings to register.</param>
         /// <param name="predicate">A requirement to meet when sending settings to players.</param>
         /// <returns>A <see cref="IEnumerable{T}"/> of <see cref="SettingBase"/> instances that were successfully registered.</returns>
+        /// <remarks>This method is used to sync new settings with players.</remarks>
         public static IEnumerable<SettingBase> Register(IEnumerable<SettingBase> settings, Func<Player, bool> predicate = null)
         {
             List<SettingBase> list = ListPool<SettingBase>.Pool.Get(settings);
@@ -240,6 +249,7 @@ namespace Exiled.API.Features.Core.UserSettings
         /// <param name="predicate">Determines which players will receive this update.</param>
         /// <param name="settings">Settings to remove. If <c>null</c>, all settings will be removed.</param>
         /// <returns>A <see cref="IEnumerable{T}"/> of <see cref="SettingBase"/> instances that were successfully removed.</returns>
+        /// <remarks>This method is used to unsync settings from players. Using it with <see cref="Register"/> provides an opportunity to update synced settings.</remarks>
         public static IEnumerable<SettingBase> Unregister(Func<Player, bool> predicate = null, IEnumerable<SettingBase> settings = null)
         {
             List<ServerSpecificSettingBase> list = ListPool<ServerSpecificSettingBase>.Pool.Get(ServerSpecificSettingsSync.DefinedSettings);
