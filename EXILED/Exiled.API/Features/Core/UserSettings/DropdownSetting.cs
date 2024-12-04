@@ -11,13 +11,38 @@ namespace Exiled.API.Features.Core.UserSettings
     using System.Collections.Generic;
     using System.Linq;
 
+    using Exiled.API.Interfaces;
     using global::UserSettings.ServerSpecific;
 
     /// <summary>
     /// Represents a dropdown setting.
     /// </summary>
-    public class DropdownSetting : SettingBase
+    public class DropdownSetting : SettingBase, IWrapper<SSDropdownSetting>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DropdownSetting"/> class.
+        /// </summary>
+        /// <param name="id"><inheritdoc cref="SettingBase.Id"/></param>
+        /// <param name="label"><inheritdoc cref="SettingBase.Label"/></param>
+        /// <param name="options"><inheritdoc cref="Options"/></param>
+        /// <param name="defaultOptionIndex"><inheritdoc cref="DefaultOptionIndex"/></param>
+        /// <param name="dropdownEntryType"><inheritdoc cref="DropdownType"/></param>
+        /// <param name="hintDescription"><inheritdoc cref="SettingBase.HintDescription"/></param>
+        /// <param name="header"><inheritdoc cref="SettingBase.Header"/></param>
+        /// <param name="onChanged"><inheritdoc cref="SettingBase.OnChanged"/></param>
+        public DropdownSetting(
+            int id,
+            string label,
+            IEnumerable<string> options,
+            int defaultOptionIndex = 0,
+            SSDropdownSetting.DropdownEntryType dropdownEntryType = SSDropdownSetting.DropdownEntryType.Regular,
+            string hintDescription = null,
+            HeaderSetting header = null,
+            Action<Player, SettingBase> onChanged = null)
+            : base(new SSDropdownSetting(id, label, options.ToArray(), defaultOptionIndex, dropdownEntryType, hintDescription), header, onChanged)
+        {
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="DropdownSetting"/> class.
         /// </summary>
@@ -36,9 +61,7 @@ namespace Exiled.API.Features.Core.UserSettings
             }
         }
 
-        /// <summary>
-        /// Gets a.
-        /// </summary>
+        /// <inheritdoc/>
         public new SSDropdownSetting Base { get; }
 
         /// <summary>

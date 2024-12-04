@@ -9,12 +9,13 @@ namespace Exiled.API.Features.Core.UserSettings
 {
     using System;
 
+    using Exiled.API.Interfaces;
     using global::UserSettings.ServerSpecific;
 
     /// <summary>
     /// Represents a two-button setting.
     /// </summary>
-    public class TwoButtonsSetting : SettingBase
+    public class TwoButtonsSetting : SettingBase, IWrapper<SSTwoButtonsSetting>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="TwoButtonsSetting"/> class.
@@ -50,7 +51,7 @@ namespace Exiled.API.Features.Core.UserSettings
             }
         }
 
-        /// <inheritdoc cref="SettingBase.Base" />
+        /// <inheritdoc/>
         public new SSTwoButtonsSetting Base { get; }
 
         /// <summary>

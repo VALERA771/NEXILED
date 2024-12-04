@@ -7,12 +7,13 @@
 
 namespace Exiled.API.Features.Core.UserSettings
 {
+    using Exiled.API.Interfaces;
     using global::UserSettings.ServerSpecific;
 
     /// <summary>
     /// Represents a header setting.
     /// </summary>
-    public class HeaderSetting : SettingBase
+    public class HeaderSetting : SettingBase, IWrapper<SSGroupHeader>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="HeaderSetting"/> class.
@@ -35,9 +36,7 @@ namespace Exiled.API.Features.Core.UserSettings
             Base = settingBase;
         }
 
-        /// <summary>
-        /// Gets a <see cref="SSGroupHeader"/> instance.
-        /// </summary>
+        /// <inheritdoc/>
         public new SSGroupHeader Base { get; }
 
         /// <summary>

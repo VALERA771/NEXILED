@@ -10,12 +10,13 @@ namespace Exiled.API.Features.Core.UserSettings
     using System;
     using System.Diagnostics;
 
+    using Exiled.API.Interfaces;
     using global::UserSettings.ServerSpecific;
 
     /// <summary>
     /// Represents a button setting.
     /// </summary>
-    public class ButtonSetting : SettingBase
+    public class ButtonSetting : SettingBase, IWrapper<SSButton>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ButtonSetting"/> class.
@@ -50,9 +51,7 @@ namespace Exiled.API.Features.Core.UserSettings
             }
         }
 
-        /// <summary>
-        /// Gets the <see cref="SSButton"/> instance.
-        /// </summary>
+        /// <inheritdoc/>
         public new SSButton Base { get; }
 
         /// <summary>

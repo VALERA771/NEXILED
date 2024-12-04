@@ -11,16 +11,15 @@ namespace Exiled.API.Features.Core.UserSettings
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq;
-    using System.Reflection;
 
-    using Exiled.API.Features.Attributes;
     using Exiled.API.Features.Pools;
+    using Exiled.API.Interfaces;
     using global::UserSettings.ServerSpecific;
 
     /// <summary>
     /// A base class for all Server Specific Settings.
     /// </summary>
-    public class SettingBase : TypeCastObject<SettingBase>
+    public class SettingBase : TypeCastObject<SettingBase>, IWrapper<ServerSpecificSettingBase>
     {
         /// <summary>
         /// A <see cref="Dictionary{TKey,TValue}"/> that contains <see cref="SettingBase"/> that were received by a players.
@@ -62,9 +61,7 @@ namespace Exiled.API.Features.Core.UserSettings
         /// </summary>
         public static Predicate<Player> SyncOnJoin { get; set; }
 
-        /// <summary>
-        /// Gets the base class for this setting.
-        /// </summary>
+        /// <inheritdoc/>
         public ServerSpecificSettingBase Base { get; }
 
         /// <summary>
@@ -100,7 +97,7 @@ namespace Exiled.API.Features.Core.UserSettings
         public ServerSpecificSettingBase.UserResponseMode ResponseMode => Base.ResponseMode;
 
         /// <summary>
-        /// Gets the settings that was sent to players.
+        /// Gets the setting that was sent to players.
         /// </summary>
         public SettingBase OriginalDefinition => Settings.Find(x => x.Id == Id);
 
@@ -150,6 +147,9 @@ namespace Exiled.API.Features.Core.UserSettings
         /// <returns>A new instance of this setting.</returns>
         public static SettingBase Create(ServerSpecificSettingBase settingBase) => settingBase switch
         {
+            SSButton button => new ButtonSetting(button),
+            SSDropdownSetting dropdownSetting => new DropdownSetting(dropdownSetting),
+            SSTextArea textArea => new TextInputSetting(textArea),
             SSGroupHeader header => new HeaderSetting(header),
             SSKeybindSetting keybindSetting => new KeybindSetting(keybindSetting),
             SSTwoButtonsSetting twoButtonsSetting => new TwoButtonsSetting(twoButtonsSetting),

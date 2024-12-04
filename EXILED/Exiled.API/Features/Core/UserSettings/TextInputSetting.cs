@@ -9,13 +9,14 @@ namespace Exiled.API.Features.Core.UserSettings
 {
     using System;
 
+    using Exiled.API.Interfaces;
     using global::UserSettings.ServerSpecific;
     using TMPro;
 
     /// <summary>
     /// Represents a text input setting.
     /// </summary>
-    public class TextInputSetting : SettingBase
+    public class TextInputSetting : SettingBase, IWrapper<SSTextArea>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="TextInputSetting"/> class.
@@ -57,9 +58,7 @@ namespace Exiled.API.Features.Core.UserSettings
             }
         }
 
-        /// <summary>
-        /// Gets the <see cref="SSTextArea"/> instance.
-        /// </summary>
+        /// <inheritdoc/>
         public new SSTextArea Base { get; }
 
         /// <summary>

@@ -9,13 +9,14 @@ namespace Exiled.API.Features.Core.UserSettings
 {
     using System;
 
+    using Exiled.API.Interfaces;
     using global::UserSettings.ServerSpecific;
     using UnityEngine;
 
     /// <summary>
     /// Represents a keybind setting.
     /// </summary>
-    public class KeybindSetting : SettingBase
+    public class KeybindSetting : SettingBase, IWrapper<SSKeybindSetting>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="KeybindSetting"/> class.
@@ -50,9 +51,7 @@ namespace Exiled.API.Features.Core.UserSettings
             }
         }
 
-        /// <summary>
-        /// Gets the <see cref="SSKeybindSetting"/> instance.
-        /// </summary>
+        /// <inheritdoc/>
         public new SSKeybindSetting Base { get; }
 
         /// <summary>
