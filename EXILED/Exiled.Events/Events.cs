@@ -15,7 +15,6 @@ namespace Exiled.Events
     using CentralAuth;
     using Exiled.API.Features.Core.UserSettings;
     using Exiled.Events.Features;
-    using HarmonyLib;
     using InventorySystem.Items.Pickups;
     using InventorySystem.Items.Usables;
 
