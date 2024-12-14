@@ -31,6 +31,7 @@ namespace Exiled.API.Features.Core.UserSettings
         public ButtonSetting(int id, string label, string buttonText, float holdTime = 0.0f, string hintDescription = null, HeaderSetting header = null, Action<Player, SettingBase> onChanged = null)
             : base(new SSButton(id, label, buttonText, holdTime, hintDescription), header, onChanged)
         {
+            Base = (SSButton)base.Base;
         }
 
         /// <summary>

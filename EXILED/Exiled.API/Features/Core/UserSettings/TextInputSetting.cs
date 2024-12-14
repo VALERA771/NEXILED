@@ -38,6 +38,7 @@ namespace Exiled.API.Features.Core.UserSettings
             Action<Player, SettingBase> onChanged = null)
             : base(new SSTextArea(id, label, foldoutMode, hintDescription, alignment), header, onChanged)
         {
+            Base = (SSTextArea)base.Base;
         }
 
         /// <summary>

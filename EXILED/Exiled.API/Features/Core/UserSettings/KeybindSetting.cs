@@ -31,6 +31,7 @@ namespace Exiled.API.Features.Core.UserSettings
         public KeybindSetting(int id, string label, KeyCode suggested, bool preventInteractionOnGUI = false, string hintDescription = "", HeaderSetting header = null, Action<Player, SettingBase> onChanged = null)
             : base(new SSKeybindSetting(id, label, suggested, preventInteractionOnGUI, hintDescription), header, onChanged)
         {
+            Base = (SSKeybindSetting)base.Base;
         }
 
         /// <summary>

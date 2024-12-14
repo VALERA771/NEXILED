@@ -24,6 +24,7 @@ namespace Exiled.API.Features.Core.UserSettings
         public HeaderSetting(string name, string hintDescription = "", bool paddling = false)
             : this(new SSGroupHeader(name, paddling, hintDescription))
         {
+            Base = (SSGroupHeader)base.Base;
         }
 
         /// <summary>

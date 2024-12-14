@@ -24,13 +24,14 @@ namespace Exiled.API.Features.Core.UserSettings
         /// <param name="label"><inheritdoc cref="SettingBase.Label"/></param>
         /// <param name="firstOption"><inheritdoc cref="FirstOption"/></param>
         /// <param name="secondOption"><inheritdoc cref="SecondOption"/></param>
-        /// <param name="defaultIsSecond"><inheritdoc cref="IsSecondDefalut"/></param>
+        /// <param name="defaultIsSecond"><inheritdoc cref="IsSecondDefault"/></param>
         /// <param name="hintDescription"><inheritdoc cref="SettingBase.HintDescription"/></param>
         /// <param name="header"><inheritdoc cref="SettingBase.Header"/></param>
         /// <param name="onChanged"><inheritdoc cref="SettingBase.OnChanged"/></param>
         public TwoButtonsSetting(int id, string label, string firstOption, string secondOption, bool defaultIsSecond = false, string hintDescription = "", HeaderSetting header = null, Action<Player, SettingBase> onChanged = null)
             : base(new SSTwoButtonsSetting(id, label, firstOption, secondOption, defaultIsSecond, hintDescription), header, onChanged)
         {
+            Base = (SSTwoButtonsSetting)base.Base;
         }
 
         /// <summary>
@@ -75,7 +76,7 @@ namespace Exiled.API.Features.Core.UserSettings
         /// <summary>
         /// Gets or sets a value indicating whether the second option is default.
         /// </summary>
-        public bool IsSecondDefalut
+        public bool IsSecondDefault
         {
             get => Base.DefaultIsB;
             set => Base.DefaultIsB = value;

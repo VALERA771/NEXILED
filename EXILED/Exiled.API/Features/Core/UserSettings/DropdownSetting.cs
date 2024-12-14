@@ -41,6 +41,7 @@ namespace Exiled.API.Features.Core.UserSettings
             Action<Player, SettingBase> onChanged = null)
             : base(new SSDropdownSetting(id, label, options.ToArray(), defaultOptionIndex, dropdownEntryType, hintDescription), header, onChanged)
         {
+            Base = (SSDropdownSetting)base.Base;
         }
 
         /// <summary>
