@@ -43,12 +43,10 @@ namespace Exiled.API.Features.Core.UserSettings
         {
             Base = settingBase;
 
-            SettingBase parent = Settings.Find(x => x.Id == settingBase.SettingId);
-
-            if (parent != null)
+            if (OriginalDefinition.Is(out ButtonSetting setting))
             {
-                Header = parent.Header;
-                OnChanged = parent.OnChanged;
+                Text = setting.Text;
+                HoldTime = setting.HoldTime;
             }
         }
 
@@ -76,6 +74,15 @@ namespace Exiled.API.Features.Core.UserSettings
         {
             get => Base.HoldTimeSeconds;
             set => Base.HoldTimeSeconds = value;
+        }
+
+        /// <summary>
+        /// Returns a representation of this <see cref="ButtonSetting"/>.
+        /// </summary>
+        /// <returns>A string in human-readable format.</returns>
+        public override string ToString()
+        {
+            return base.ToString() + $" ={Text}= -{HoldTime}- /{LastPress}/";
         }
     }
 }

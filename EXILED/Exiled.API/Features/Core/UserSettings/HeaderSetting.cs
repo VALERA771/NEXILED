@@ -25,6 +25,8 @@ namespace Exiled.API.Features.Core.UserSettings
             : this(new SSGroupHeader(name, paddling, hintDescription))
         {
             Base = (SSGroupHeader)base.Base;
+
+            Base.SetId(null, name);
         }
 
         /// <summary>
@@ -35,6 +37,7 @@ namespace Exiled.API.Features.Core.UserSettings
             : base(settingBase)
         {
             Base = settingBase;
+            Base.SetId(null, settingBase.Label);
         }
 
         /// <inheritdoc/>
@@ -47,6 +50,15 @@ namespace Exiled.API.Features.Core.UserSettings
         {
             get => Base.ReducedPadding;
             set => Base.ReducedPadding = value;
+        }
+
+        /// <summary>
+        /// Returns a representation of this <see cref="HeaderSetting"/>.
+        /// </summary>
+        /// <returns>A string in human-readable format.</returns>
+        public override string ToString()
+        {
+            return base.ToString() + $" /{ReducedPaddling}/";
         }
     }
 }

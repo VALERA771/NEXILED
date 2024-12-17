@@ -42,14 +42,6 @@ namespace Exiled.API.Features.Core.UserSettings
             : base(settingBase)
         {
             Base = settingBase;
-
-            SettingBase parent = Settings.Find(x => x.Id == settingBase.SettingId);
-
-            if (parent != null)
-            {
-                Header = parent.Header;
-                OnChanged = parent.OnChanged;
-            }
         }
 
         /// <inheritdoc/>
@@ -76,6 +68,15 @@ namespace Exiled.API.Features.Core.UserSettings
         {
             get => Base.SuggestedKey;
             set => Base.SuggestedKey = value;
+        }
+
+        /// <summary>
+        /// Returns a representation of this <see cref="KeybindSetting"/>.
+        /// </summary>
+        /// <returns>A string in human-readable format.</returns>
+        public override string ToString()
+        {
+            return base.ToString() + $" /{IsPressed}/ *{KeyCode}* +{PreventInteractionOnGUI}+";
         }
     }
 }

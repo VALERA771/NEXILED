@@ -53,12 +53,9 @@ namespace Exiled.API.Features.Core.UserSettings
         {
             Base = settingBase;
 
-            SettingBase parent = Settings.Find(x => x.Id == settingBase.SettingId);
-
-            if (parent != null)
+            if (OriginalDefinition.Is(out DropdownSetting dropdown))
             {
-                Header = parent.Header;
-                OnChanged = parent.OnChanged;
+                Options = dropdown.Options;
             }
         }
 
@@ -99,6 +96,33 @@ namespace Exiled.API.Features.Core.UserSettings
         {
             get => Base.EntryType;
             set => Base.EntryType = value;
+        }
+
+        /// <summary>
+        /// Gets or sets an index of selected option.
+        /// </summary>
+        public int SelectedIndex
+        {
+            get => Base.SyncSelectionIndexRaw;
+            set => Base.SyncSelectionIndexRaw = value;
+        }
+
+        /// <summary>
+        /// Gets or sets a selected option.
+        /// </summary>
+        public string SelectedOption
+        {
+            get => Base.SyncSelectionText;
+            set => SelectedIndex = Array.IndexOf(Base.Options, value);
+        }
+
+        /// <summary>
+        /// Gets a string representation of this <see cref="DropdownSetting"/>.
+        /// </summary>
+        /// <returns>A string in human-readable format.</returns>
+        public override string ToString()
+        {
+            return base.ToString() + $" ={DefaultOptionIndex}= -{SelectedIndex}- /{string.Join(";", Options)}/";
         }
     }
 }

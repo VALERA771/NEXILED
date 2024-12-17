@@ -43,12 +43,10 @@ namespace Exiled.API.Features.Core.UserSettings
         {
             Base = settingBase;
 
-            SettingBase parent = Settings.Find(x => x.Id == settingBase.SettingId);
-
-            if (parent != null)
+            if (OriginalDefinition.Is(out TwoButtonsSetting setting))
             {
-                Header = parent.Header;
-                OnChanged = parent.OnChanged;
+                FirstOption = setting.FirstOption;
+                SecondOption = setting.SecondOption;
             }
         }
 
@@ -98,6 +96,15 @@ namespace Exiled.API.Features.Core.UserSettings
         {
             get => Base.OptionB;
             set => Base.OptionB = value;
+        }
+
+        /// <summary>
+        /// Returns a representation of this <see cref="ButtonSetting"/>.
+        /// </summary>
+        /// <returns>A string in human-readable format.</returns>
+        public override string ToString()
+        {
+            return base.ToString() + $" /{FirstOption}/ *{SecondOption}* +{IsSecondDefault}+ '{IsFirst}'";
         }
     }
 }

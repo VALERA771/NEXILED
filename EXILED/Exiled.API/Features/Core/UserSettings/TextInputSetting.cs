@@ -49,27 +49,10 @@ namespace Exiled.API.Features.Core.UserSettings
             : base(settingBase)
         {
             Base = settingBase;
-
-            SettingBase parent = Settings.Find(x => x.Id == settingBase.SettingId);
-
-            if (parent != null)
-            {
-                Header = parent.Header;
-                OnChanged = parent.OnChanged;
-            }
         }
 
         /// <inheritdoc/>
         public new SSTextArea Base { get; }
-
-        /// <summary>
-        /// Gets or sets the text for the setting.
-        /// </summary>
-        public string Content
-        {
-            get => Label;
-            set => Label = value;
-        }
 
         /// <summary>
         /// Gets or sets the text for the setting.
@@ -96,6 +79,15 @@ namespace Exiled.API.Features.Core.UserSettings
         {
             get => Base.AlignmentOptions;
             set => Base.AlignmentOptions = value;
+        }
+
+        /// <summary>
+        /// Returns a representation of this <see cref="TextInputSetting"/>.
+        /// </summary>
+        /// <returns>A string in human-readable format.</returns>
+        public override string ToString()
+        {
+            return base.ToString() + $" /{FoldoutMode}/ *{Alignment}*";
         }
     }
 }

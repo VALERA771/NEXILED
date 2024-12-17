@@ -46,6 +46,23 @@ namespace Exiled.API.Features.Core.UserSettings
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="SettingBase"/> class.
+        /// </summary>
+        /// <param name="settingBase"><inheritdoc cref="Base"/></param>
+        internal SettingBase(ServerSpecificSettingBase settingBase)
+        {
+            Base = settingBase;
+
+            if (OriginalDefinition != null)
+            {
+                Header = OriginalDefinition.Header;
+                OnChanged = OriginalDefinition.OnChanged;
+                Label = OriginalDefinition.Label;
+                HintDescription = OriginalDefinition.HintDescription;
+            }
+        }
+
+        /// <summary>
         /// Gets the list of all synced settings.
         /// </summary>
         public static IReadOnlyDictionary<Player, ReadOnlyCollection<SettingBase>> SyncedList
@@ -207,7 +224,7 @@ namespace Exiled.API.Features.Core.UserSettings
         public static IEnumerable<SettingBase> Register(IEnumerable<SettingBase> settings, Func<Player, bool> predicate = null)
         {
             List<SettingBase> list = ListPool<SettingBase>.Pool.Get(settings);
-            List<SettingBase> list2 = ListPool<SettingBase>.Pool.Get();
+            List<SettingBase> list2 = new(list.Count);
 
             while (list.Exists(x => x.Header != null))
             {
@@ -235,12 +252,10 @@ namespace Exiled.API.Features.Core.UserSettings
             else
                 SendToAll(predicate);
 
-            foreach (SettingBase setting in list2)
-                yield return setting;
-
-            ListPool<SettingBase>.Pool.Return(list);
-            ListPool<SettingBase>.Pool.Return(list2);
             ListPool<ServerSpecificSettingBase>.Pool.Return(list3);
+            ListPool<SettingBase>.Pool.Return(list);
+
+            return list2;
         }
 
         /// <summary>
@@ -253,7 +268,7 @@ namespace Exiled.API.Features.Core.UserSettings
         public static IEnumerable<SettingBase> Unregister(Func<Player, bool> predicate = null, IEnumerable<SettingBase> settings = null)
         {
             List<ServerSpecificSettingBase> list = ListPool<ServerSpecificSettingBase>.Pool.Get(ServerSpecificSettingsSync.DefinedSettings);
-            List<SettingBase> list2 = ListPool<SettingBase>.Pool.Get((settings ?? Settings).Where(setting => list.Remove(setting.Base)));
+            List<SettingBase> list2 = new((settings ?? Settings).Where(setting => list.Remove(setting.Base)));
 
             ServerSpecificSettingsSync.DefinedSettings = list.ToArray();
 
@@ -262,11 +277,18 @@ namespace Exiled.API.Features.Core.UserSettings
             else
                 SendToAll(predicate);
 
-            foreach (SettingBase setting in list2)
-                yield return setting;
-
             ListPool<ServerSpecificSettingBase>.Pool.Return(list);
-            ListPool<SettingBase>.Pool.Return(list2);
+
+            return list2;
+        }
+
+        /// <summary>
+        /// Returns a string representation of this <see cref="SettingBase"/>.
+        /// </summary>
+        /// <returns>A string in human-readable format.</returns>
+        public override string ToString()
+        {
+            return $"{Id} ({Label}) [{HintDescription}] {{{ResponseMode}}} ^{Header}^";
         }
 
         /// <summary>
@@ -285,6 +307,10 @@ namespace Exiled.API.Features.Core.UserSettings
             {
                 setting = Create(settingBase);
                 ReceivedSettings.Add(player, new() { setting });
+
+                if (setting.Is(out ButtonSetting _))
+                    setting.OriginalDefinition.OnChanged?.Invoke(player, setting);
+
                 return;
             }
 
@@ -292,6 +318,10 @@ namespace Exiled.API.Features.Core.UserSettings
             {
                 setting = Create(settingBase);
                 list.Add(setting);
+
+                if (setting.Is(out ButtonSetting _))
+                    setting.OriginalDefinition.OnChanged?.Invoke(player, setting);
+
                 return;
             }
 
