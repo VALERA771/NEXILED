@@ -37,7 +37,7 @@ namespace Exiled.API.Features.Core.UserSettings
         /// <param name="settingBase">A <see cref="ServerSpecificSettingBase"/> instance.</param>
         /// <param name="header"><inheritdoc cref="Header"/></param>
         /// <param name="onChanged"><inheritdoc cref="OnChanged"/></param>
-        internal SettingBase(ServerSpecificSettingBase settingBase, HeaderSetting header = null, Action<Player, SettingBase> onChanged = null)
+        internal SettingBase(ServerSpecificSettingBase settingBase, HeaderSetting header, Action<Player, SettingBase> onChanged)
         {
             Base = settingBase;
 
@@ -116,11 +116,13 @@ namespace Exiled.API.Features.Core.UserSettings
         /// <summary>
         /// Gets the setting that was sent to players.
         /// </summary>
+        /// <remarks>Can be <c>null</c> if this <see cref="SettingBase"/> is a prefab.</remarks>
         public SettingBase OriginalDefinition => Settings.Find(x => x.Id == Id);
 
         /// <summary>
         /// Gets or sets the header of this setting.
         /// </summary>
+        /// <remarks>Can be <c>null</c>.</remarks>
         public HeaderSetting Header { get; set; }
 
         /// <summary>
