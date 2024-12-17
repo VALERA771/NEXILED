@@ -14,7 +14,6 @@ namespace Exiled.API.Interfaces
     /// </summary>
     /// <typeparam name="T">The base-game class that is being wrapped.</typeparam>
     public interface IWrapper<T>
-        where T : MonoBehaviour
     {
         /// <summary>
         /// Gets the base <typeparamref name="T"/> that this class is wrapping.
