@@ -17,6 +17,10 @@ namespace Exiled.API.Features.Objectives
     public class HumanObjective<T> : Objective, IWrapper<HumanObjectiveBase<T>>
         where T : ObjectiveFootprintBase
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HumanObjective{T}"/> class.
+        /// </summary>
+        /// <param name="objectiveFootprintBase">A <see cref="HumanObjectiveBase{T}"/> instance.</param>
         internal HumanObjective(HumanObjectiveBase<T> objectiveFootprintBase)
             : base(objectiveFootprintBase)
         {
@@ -29,7 +33,11 @@ namespace Exiled.API.Features.Objectives
         /// <summary>
         /// Gets or sets the objective footprint.
         /// </summary>
-        public T ObjectiveFootprint { get; set; }
+        public T ObjectiveFootprint
+        {
+            get => (T)Base.ObjectiveFootprint;
+            set => Base.ObjectiveFootprint = value;
+        }
 
         /// <summary>
         /// Achieves the objective.

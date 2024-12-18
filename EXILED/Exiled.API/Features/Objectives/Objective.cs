@@ -5,37 +5,45 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using System.Collections.Generic;
-using System.Linq;
-using Respawning;
-
 namespace Exiled.API.Features.Objectives
 {
+    using System.Collections.Generic;
+    using System.Linq;
+
     using Exiled.API.Enums;
     using Exiled.API.Features.Core;
     using Exiled.API.Interfaces;
     using PlayerRoles;
+    using Respawning;
     using Respawning.Objectives;
 
-    using BaseScpPickupObjective = Respawning.Objectives.ScpItemPickupObjective;
     using BaseHumanDamageObjective = Respawning.Objectives.HumanDamageObjective;
     using BaseHumanKillObjective = Respawning.Objectives.HumanKillObjective;
+    using BaseScpPickupObjective = Respawning.Objectives.ScpItemPickupObjective;
 
     /// <summary>
     /// A wrapper for Faction objective.
     /// </summary>
     public class Objective : TypeCastObject<FactionObjectiveBase>, IWrapper<FactionObjectiveBase>
     {
-        internal static Dictionary<ObjectiveType, Objective> Objectibes = new();
+        /// <summary>
+        /// A dictionary of all objectives.
+        /// </summary>
+        private static readonly Dictionary<ObjectiveType, Objective> Objectives = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Objective"/> class.
         /// </summary>
         /// <param name="objectiveFootprintBase"><inheritdoc cref="Base"/></param>
-        internal Objective(FactionObjectiveBase objectiveFootprintBase)
+        public Objective(FactionObjectiveBase objectiveFootprintBase)
         {
             Base = objectiveFootprintBase;
         }
+
+        /// <summary>
+        /// Gets all objectives.
+        /// </summary>
+        public static IReadOnlyCollection<Objective> List => Objectives.Values;
 
         /// <inheritdoc/>
         public FactionObjectiveBase Base { get; }
@@ -45,16 +53,28 @@ namespace Exiled.API.Features.Objectives
         /// </summary>
         public virtual ObjectiveType Type { get; } = ObjectiveType.None;
 
-        public static Objective Get(ObjectiveType type) => Objectibes.TryGetValue(type, out Objective objective)
-            ? objective
-            : type switch
+        /// <summary>
+        /// Gets the objective by its type.
+        /// </summary>
+        /// <param name="type">Type of objective.</param>
+        /// <returns>An <see cref="Objective"/> instance if found, <c>null</c> otherwise.</returns>
+        public static Objective Get(ObjectiveType type)
+        {
+            if (Objectives.TryGetValue(type, out Objective objective))
+                return objective;
+
+            objective = type switch
             {
                 ObjectiveType.ScpItemPickup => new ScpItemPickupObjective(FactionInfluenceManager.Objectives.OfType<BaseScpPickupObjective>().First()),
-                ObjectiveType.GeneratorActivation => new GeneratorActivationObjective(FactionInfluenceManager.Objectives.OfType<GeneratorActivatedObjective>().First()),
+                ObjectiveType.GeneratorActivation => new GeneratorActivatedObjective(FactionInfluenceManager.Objectives.OfType<Respawning.Objectives.GeneratorActivatedObjective>().First()),
                 ObjectiveType.HumanDamage => new HumanDamageObjective(FactionInfluenceManager.Objectives.OfType<BaseHumanDamageObjective>().First()),
                 ObjectiveType.HumanKill => new HumanKillObjective(FactionInfluenceManager.Objectives.OfType<BaseHumanKillObjective>().First()),
                 _ => null
             };
+
+            Objectives.Add(type, objective);
+            return objective;
+        }
 
         /// <summary>
         /// Reduces timer for faction.

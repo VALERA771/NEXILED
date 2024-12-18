@@ -7,6 +7,8 @@
 
 namespace Exiled.API.Features.Objectives
 {
+    using Exiled.API.Enums;
+    using Exiled.API.Features.DamageHandlers;
     using Exiled.API.Interfaces;
     using PlayerRoles;
     using Respawning.Objectives;
@@ -31,6 +33,9 @@ namespace Exiled.API.Features.Objectives
         /// <inheritdoc/>
         public new BaseObjective Base { get; }
 
+        /// <inheritdoc/>
+        public override ObjectiveType Type { get; } = ObjectiveType.HumanKill;
+
         /// <summary>
         /// Checks if the role is an enemy role.
         /// </summary>
@@ -46,5 +51,19 @@ namespace Exiled.API.Features.Objectives
         /// <param name="player">Attacker.</param>
         /// <returns><c>true</c> if player is an enemy, <c>false</c> otherwise.</returns>
         public bool IsValidEnemy(Player target, Player player) => IsValidEnemy(target.Role, player);
+
+        /// <summary>
+        /// TODO.
+        /// </summary>
+        /// <param name="damageHandler">An <see cref="AttackerDamageHandler"/> instance.</param>
+        public void Kill(AttackerDamageHandler damageHandler) => Base.OnKill(damageHandler.Target.ReferenceHub, damageHandler.Base);
+
+        /// <summary>
+        /// TODO.
+        /// </summary>
+        /// <param name="target">Target player.</param>
+        /// <param name="attacker">Attacker.</param>
+        /// <param name="damageType">Damage type.</param>
+        public void Kill(Player target, Player attacker, DamageType damageType = DamageType.Unknown) => Kill(new CustomDamageHandler(target, attacker, -1, damageType));
     }
 }

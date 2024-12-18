@@ -32,8 +32,11 @@ namespace Exiled.API.Features.Objectives
         /// <inheritdoc/>
         public new BaseObjective Base { get; }
 
+        /// <inheritdoc/>
+        public override ObjectiveType Type { get; } = ObjectiveType.HumanDamage;
+
         /// <summary>
-        /// Damages target and counts it in an objective.
+        /// TODO.
         /// </summary>
         /// <param name="attacker">Attacker.</param>
         /// <param name="target">Target to damage.</param>
@@ -43,7 +46,7 @@ namespace Exiled.API.Features.Objectives
             => Damage(new CustomDamageHandler(target, attacker, amount, type, string.Empty));
 
         /// <summary>
-        /// Damages target and counts it in an objective.
+        /// TODO.
         /// </summary>
         /// <param name="damageHandler">An <see cref="AttackerDamageHandler"/> instance.</param>
         public void Damage(AttackerDamageHandler damageHandler) => Base.OnPlayerDamaged(damageHandler.Attacker.ReferenceHub, damageHandler.Base);
