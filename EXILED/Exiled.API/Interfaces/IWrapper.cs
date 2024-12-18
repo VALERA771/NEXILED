@@ -7,8 +7,6 @@
 
 namespace Exiled.API.Interfaces
 {
-    using UnityEngine;
-
     /// <summary>
     /// Defines the contract for classes that wrap a base-game object.
     /// </summary>
