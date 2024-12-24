@@ -1,4 +1,4 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 // <copyright file="ChangingDisruptorModeEventArgs.cs" company="ExMod Team">
 // Copyright (c) ExMod Team. All rights reserved.
 // Licensed under the CC BY-SA 3.0 license.
@@ -15,7 +15,7 @@ namespace Exiled.Events.EventArgs.Player
     /// <summary>
     /// Contains all information before disruptor's mode is changed.
     /// </summary>
-    public class ChangingDisruptorModeEventArgs : IFirearmEvent, IPlayerEvent // TODO move to Item event handler and remove IPlayerEvent
+    public class ChangingDisruptorModeEventArgs : IFirearmEvent
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ChangingDisruptorModeEventArgs"/> class.

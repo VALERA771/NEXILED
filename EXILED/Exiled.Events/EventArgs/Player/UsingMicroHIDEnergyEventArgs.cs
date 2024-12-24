@@ -17,7 +17,7 @@ namespace Exiled.Events.EventArgs.Player
     /// <summary>
     /// Contains all information before MicroHID energy is changed.
     /// </summary>
-    public class UsingMicroHIDEnergyEventArgs : IDeniableEvent, IItemEvent, IPlayerEvent // TODO move to Item handler and remove IPlayerEvent
+    public class UsingMicroHIDEnergyEventArgs : IDeniableEvent, IItemEvent
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="UsingMicroHIDEnergyEventArgs" /> class.
