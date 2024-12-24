@@ -8,13 +8,14 @@
 namespace Exiled.Events.EventArgs.Player
 {
     using Exiled.API.Enums;
+    using Exiled.API.Features;
     using Exiled.API.Features.Items;
     using Exiled.Events.EventArgs.Interfaces;
 
     /// <summary>
     /// Contains all information before disruptor's mode is changed.
     /// </summary>
-    public class ChangingDisruptorModeEventArgs : IFirearmEvent
+    public class ChangingDisruptorModeEventArgs : IFirearmEvent, IPlayerEvent // TODO move to Item event handler and remove IPlayerEvent
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ChangingDisruptorModeEventArgs"/> class.
@@ -37,5 +38,8 @@ namespace Exiled.Events.EventArgs.Player
         /// Gets a new disruptor's fire mode.
         /// </summary>
         public DisruptorMode NewMode { get; }
+
+        /// <inheritdoc />
+        public Player Player => Item.Owner;
     }
 }

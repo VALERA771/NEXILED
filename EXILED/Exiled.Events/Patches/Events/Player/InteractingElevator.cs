@@ -24,11 +24,11 @@ namespace Exiled.Events.Patches.Events.Player
     using static HarmonyLib.AccessTools;
 
     /// <summary>
-    /// Patches <see cref="ElevatorManager" />.
+    /// Patches <see cref="ElevatorDoor.ServerInteract" />.
     /// Adds the <see cref="Handlers.Player.InteractingElevator" /> event.
     /// </summary>
     [EventPatch(typeof(Handlers.Player), nameof(Handlers.Player.InteractingElevator))]
-    [HarmonyPatch(typeof(ElevatorChamber), nameof(ElevatorChamber.ServerInteract))]
+    [HarmonyPatch(typeof(ElevatorDoor), nameof(ElevatorDoor.ServerInteract))]
     internal class InteractingElevator
     {
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
@@ -53,6 +53,7 @@ namespace Exiled.Events.Patches.Events.Player
 
                     // elevatorChamber
                     new(OpCodes.Ldarg_0),
+                    new(OpCodes.Ldfld, Field(typeof(ElevatorDoor), nameof(ElevatorDoor.Chamber))),
 
                     // true
                     new(OpCodes.Ldc_I4_1),

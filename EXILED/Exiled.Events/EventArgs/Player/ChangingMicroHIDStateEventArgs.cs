@@ -18,7 +18,7 @@ namespace Exiled.Events.EventArgs.Player
     /// <summary>
     /// Contains all information before MicroHID state is changed.
     /// </summary>
-    public class ChangingMicroHIDStateEventArgs : IDeniableEvent, IItemEvent
+    public class ChangingMicroHIDStateEventArgs : IDeniableEvent, IItemEvent, IPlayerEvent // TODO move to Item handler and remove IPlayerEvent
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ChangingMicroHIDStateEventArgs" /> class.
@@ -56,5 +56,8 @@ namespace Exiled.Events.EventArgs.Player
 
         /// <inheritdoc/>
         public Item Item => MicroHID;
+
+        /// <inheritdoc/>
+        public Player Player => MicroHID.Owner;
     }
 }
