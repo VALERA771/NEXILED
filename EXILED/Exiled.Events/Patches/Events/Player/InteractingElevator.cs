@@ -55,10 +55,13 @@ namespace Exiled.Events.Patches.Events.Player
                     new(OpCodes.Ldarg_0),
                     new(OpCodes.Ldfld, Field(typeof(ElevatorDoor), nameof(ElevatorDoor.Chamber))),
 
+                    // false
+                    new(OpCodes.Ldc_I4_0),
+
                     // true
                     new(OpCodes.Ldc_I4_1),
 
-                    // InteractingElevatorEventArgs ev = new(Player, ElevatorChamber, bool)
+                    // InteractingElevatorEventArgs ev = new(Player, ElevatorChamber, bool, bool)
                     new(OpCodes.Newobj, GetDeclaredConstructors(typeof(InteractingElevatorEventArgs))[0]),
                     new(OpCodes.Dup),
 
@@ -113,7 +116,10 @@ namespace Exiled.Events.Patches.Events.Player
                     // true
                     new(OpCodes.Ldc_I4_1),
 
-                    // InteractingElevatorEventArgs ev = new(Player, ElevatorChamber, bool)
+                    // true
+                    new(OpCodes.Ldc_I4_1),
+
+                    // InteractingElevatorEventArgs ev = new(Player, ElevatorChamber, bool, bool)
                     new(OpCodes.Newobj, GetDeclaredConstructors(typeof(InteractingElevatorEventArgs))[0]),
                     new(OpCodes.Dup),
 
