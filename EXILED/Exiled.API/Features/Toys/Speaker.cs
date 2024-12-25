@@ -100,11 +100,6 @@ namespace Exiled.API.Features.Toys
         }
 
         /// <summary>
-        /// Gets the playback of this speaker.
-        /// </summary>
-        public SpeakerToyPlaybackBase Playback => Base.Playback;
-
-        /// <summary>
         /// Creates a new <see cref="Speaker"/>.
         /// </summary>
         /// <param name="position">The position of the <see cref="Speaker"/>.</param>
