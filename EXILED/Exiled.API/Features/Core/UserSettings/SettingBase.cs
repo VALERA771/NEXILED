@@ -311,7 +311,7 @@ namespace Exiled.API.Features.Core.UserSettings
                 ReceivedSettings.Add(player, new() { setting });
 
                 if (setting.Is(out ButtonSetting _))
-                    setting.OriginalDefinition.OnChanged?.Invoke(player, setting);
+                    goto invoke;
 
                 return;
             }
@@ -322,12 +322,14 @@ namespace Exiled.API.Features.Core.UserSettings
                 list.Add(setting);
 
                 if (setting.Is(out ButtonSetting _))
-                    setting.OriginalDefinition.OnChanged?.Invoke(player, setting);
+                    goto invoke;
 
                 return;
             }
 
             setting = list.Find(x => x.Id == settingBase.SettingId);
+
+            invoke:
 
             if (setting.OriginalDefinition == null)
             {
