@@ -53,7 +53,7 @@ namespace Exiled.API.Features.Core.UserSettings
         /// <summary>
         /// Initializes a new instance of the <see cref="TextInputSetting"/> class.
         /// </summary>
-        /// <param name="settingBase">A <see cref=""/></param>
+        /// <param name="settingBase">A <see cref="SSPlaintextSetting"/> instance.</param>
         internal TextInputSetting(SSPlaintextSetting settingBase)
             : base(settingBase)
         {
