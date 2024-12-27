@@ -172,7 +172,8 @@ namespace Exiled.API.Features.Core.UserSettings
         {
             SSButton button => new ButtonSetting(button),
             SSDropdownSetting dropdownSetting => new DropdownSetting(dropdownSetting),
-            SSTextArea textArea => new TextInputSetting(textArea),
+            SSTextArea textArea => new TextAreaSetting(textArea),
+            SSPlaintextSetting plaintextSetting => new TextInputSetting(plaintextSetting),
             SSGroupHeader header => new HeaderSetting(header),
             SSKeybindSetting keybindSetting => new KeybindSetting(keybindSetting),
             SSTwoButtonsSetting twoButtonsSetting => new TwoButtonsSetting(twoButtonsSetting),
