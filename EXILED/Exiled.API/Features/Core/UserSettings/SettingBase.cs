@@ -1,4 +1,4 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 // <copyright file="SettingBase.cs" company="ExMod Team">
 // Copyright (c) ExMod Team. All rights reserved.
 // Licensed under the CC BY-SA 3.0 license.
@@ -131,7 +131,7 @@ namespace Exiled.API.Features.Core.UserSettings
         public Action<Player, SettingBase> OnChanged { get; set; }
 
         /// <summary>
-        /// Tries ti get the setting with the specified id.
+        /// Tries to get the setting with the specified id.
         /// </summary>
         /// <param name="player">Player who has received the setting.</param>
         /// <param name="id">Id of the setting.</param>
@@ -225,7 +225,7 @@ namespace Exiled.API.Features.Core.UserSettings
         /// <remarks>This method is used to sync new settings with players.</remarks>
         public static IEnumerable<SettingBase> Register(IEnumerable<SettingBase> settings, Func<Player, bool> predicate = null)
         {
-            List<SettingBase> list = ListPool<SettingBase>.Pool.Get(settings);
+            List<SettingBase> list = ListPool<SettingBase>.Pool.Get(settings.Where(x => x != null));
             List<SettingBase> list2 = new(list.Count);
 
             while (list.Exists(x => x.Header != null))
@@ -311,7 +311,7 @@ namespace Exiled.API.Features.Core.UserSettings
                 ReceivedSettings.Add(player, new() { setting });
 
                 if (setting.Is(out ButtonSetting _))
-                    setting.OriginalDefinition.OnChanged?.Invoke(player, setting);
+                    goto invoke;
 
                 return;
             }
@@ -322,13 +322,21 @@ namespace Exiled.API.Features.Core.UserSettings
                 list.Add(setting);
 
                 if (setting.Is(out ButtonSetting _))
-                    setting.OriginalDefinition.OnChanged?.Invoke(player, setting);
+                    goto invoke;
 
                 return;
             }
 
             setting = list.Find(x => x.Id == settingBase.SettingId);
-            setting.OriginalDefinition.OnChanged?.Invoke(player, setting);
+
+            invoke:
+
+            if (setting.OriginalDefinition == null)
+            {
+                Settings.Add(Create(settingBase.OriginalDefinition));
+            }
+
+            setting.OriginalDefinition?.OnChanged?.Invoke(player, setting);
         }
     }
 }
