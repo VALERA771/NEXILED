@@ -7,6 +7,7 @@
 
 namespace Exiled.API.Features.Objectives
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -17,6 +18,7 @@ namespace Exiled.API.Features.Objectives
     using Respawning;
     using Respawning.Objectives;
 
+    using BaseGeneratorObjective = Respawning.Objectives.GeneratorActivatedObjective;
     using BaseHumanDamageObjective = Respawning.Objectives.HumanDamageObjective;
     using BaseHumanKillObjective = Respawning.Objectives.HumanKillObjective;
     using BaseScpPickupObjective = Respawning.Objectives.ScpItemPickupObjective;
@@ -29,7 +31,7 @@ namespace Exiled.API.Features.Objectives
         /// <summary>
         /// A dictionary of all objectives.
         /// </summary>
-        private static readonly Dictionary<ObjectiveType, Objective> Objectives = new();
+        private static readonly Dictionary<FactionObjectiveBase, Objective> Objectives = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Objective"/> class.
@@ -38,6 +40,7 @@ namespace Exiled.API.Features.Objectives
         public Objective(FactionObjectiveBase objectiveFootprintBase)
         {
             Base = objectiveFootprintBase;
+            Objectives.Add(Base, this);
         }
 
         /// <summary>
@@ -58,23 +61,41 @@ namespace Exiled.API.Features.Objectives
         /// </summary>
         /// <param name="type">Type of objective.</param>
         /// <returns>An <see cref="Objective"/> instance if found, <c>null</c> otherwise.</returns>
-        public static Objective Get(ObjectiveType type)
+        public static Objective Get(ObjectiveType type) => Get(type switch
         {
-            if (Objectives.TryGetValue(type, out Objective objective))
+            ObjectiveType.ScpItemPickup => FactionInfluenceManager.Objectives.OfType<BaseScpPickupObjective>().First(),
+            ObjectiveType.GeneratorActivation => FactionInfluenceManager.Objectives.OfType<Respawning.Objectives.GeneratorActivatedObjective>().First(),
+            ObjectiveType.HumanDamage => FactionInfluenceManager.Objectives.OfType<BaseHumanDamageObjective>().First(),
+            ObjectiveType.HumanKill => FactionInfluenceManager.Objectives.OfType<BaseHumanKillObjective>().First(),
+            _ => null
+        });
+
+        /// <summary>
+        /// Gets the objective by its base.
+        /// </summary>
+        /// <param name="factionObjectiveBase">A <see cref="FactionObjectiveBase"/> instance.</param>
+        /// <returns>A <see cref="Objective"/> instance.</returns>
+        public static Objective Get(FactionObjectiveBase factionObjectiveBase)
+        {
+            if (Objectives.TryGetValue(factionObjectiveBase, out Objective objective))
                 return objective;
 
-            objective = type switch
+            return factionObjectiveBase switch
             {
-                ObjectiveType.ScpItemPickup => new ScpItemPickupObjective(FactionInfluenceManager.Objectives.OfType<BaseScpPickupObjective>().First()),
-                ObjectiveType.GeneratorActivation => new GeneratorActivatedObjective(FactionInfluenceManager.Objectives.OfType<Respawning.Objectives.GeneratorActivatedObjective>().First()),
-                ObjectiveType.HumanDamage => new HumanDamageObjective(FactionInfluenceManager.Objectives.OfType<BaseHumanDamageObjective>().First()),
-                ObjectiveType.HumanKill => new HumanKillObjective(FactionInfluenceManager.Objectives.OfType<BaseHumanKillObjective>().First()),
-                _ => null
+                BaseScpPickupObjective scpItemPickupObjective => new ScpItemPickupObjective(scpItemPickupObjective),
+                BaseGeneratorObjective generatorActivatedObjective => new GeneratorActivatedObjective(generatorActivatedObjective),
+                BaseHumanDamageObjective humanDamageObjective => new HumanDamageObjective(humanDamageObjective),
+                BaseHumanKillObjective humanKillObjective => new HumanKillObjective(humanKillObjective),
+                _ => new Objective(factionObjectiveBase)
             };
-
-            Objectives.Add(type, objective);
-            return objective;
         }
+
+        /// <summary>
+        /// Gets all objectives accoring to predicate.
+        /// </summary>
+        /// <param name="predicate">Requirements to meet.</param>
+        /// <returns>A collection of <see cref="Objective"/> instances.</returns>
+        public static IEnumerable<Objective> Get(Func<Objective, bool> predicate) => List.Where(predicate);
 
         /// <summary>
         /// Reduces timer for faction.
