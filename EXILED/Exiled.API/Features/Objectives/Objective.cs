@@ -64,7 +64,7 @@ namespace Exiled.API.Features.Objectives
         public static Objective Get(ObjectiveType type) => Get(type switch
         {
             ObjectiveType.ScpItemPickup => FactionInfluenceManager.Objectives.OfType<BaseScpPickupObjective>().First(),
-            ObjectiveType.GeneratorActivation => FactionInfluenceManager.Objectives.OfType<Respawning.Objectives.GeneratorActivatedObjective>().First(),
+            ObjectiveType.GeneratorActivation => FactionInfluenceManager.Objectives.OfType<BaseGeneratorObjective>().First(),
             ObjectiveType.HumanDamage => FactionInfluenceManager.Objectives.OfType<BaseHumanDamageObjective>().First(),
             ObjectiveType.HumanKill => FactionInfluenceManager.Objectives.OfType<BaseHumanKillObjective>().First(),
             _ => null
@@ -74,7 +74,7 @@ namespace Exiled.API.Features.Objectives
         /// Gets the objective by its base.
         /// </summary>
         /// <param name="factionObjectiveBase">A <see cref="FactionObjectiveBase"/> instance.</param>
-        /// <returns>A <see cref="Objective"/> instance.</returns>
+        /// <returns>An <see cref="Objective"/> instance.</returns>
         public static Objective Get(FactionObjectiveBase factionObjectiveBase)
         {
             if (Objectives.TryGetValue(factionObjectiveBase, out Objective objective))
