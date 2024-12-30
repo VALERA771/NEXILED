@@ -18,6 +18,7 @@ namespace Exiled.API.Features.Objectives
     using Respawning;
     using Respawning.Objectives;
 
+    using BaseEscapeObjective = Respawning.Objectives.EscapeObjective;
     using BaseGeneratorObjective = Respawning.Objectives.GeneratorActivatedObjective;
     using BaseHumanDamageObjective = Respawning.Objectives.HumanDamageObjective;
     using BaseHumanKillObjective = Respawning.Objectives.HumanKillObjective;
@@ -67,6 +68,7 @@ namespace Exiled.API.Features.Objectives
             ObjectiveType.GeneratorActivation => FactionInfluenceManager.Objectives.OfType<BaseGeneratorObjective>().First(),
             ObjectiveType.HumanDamage => FactionInfluenceManager.Objectives.OfType<BaseHumanDamageObjective>().First(),
             ObjectiveType.HumanKill => FactionInfluenceManager.Objectives.OfType<BaseHumanKillObjective>().First(),
+            ObjectiveType.Escape => FactionInfluenceManager.Objectives.OfType<BaseEscapeObjective>().First(),
             _ => null
         });
 
@@ -86,16 +88,10 @@ namespace Exiled.API.Features.Objectives
                 BaseGeneratorObjective generatorActivatedObjective => new GeneratorActivatedObjective(generatorActivatedObjective),
                 BaseHumanDamageObjective humanDamageObjective => new HumanDamageObjective(humanDamageObjective),
                 BaseHumanKillObjective humanKillObjective => new HumanKillObjective(humanKillObjective),
+                BaseEscapeObjective escapeObjective => new EscapeObjective(escapeObjective),
                 _ => new Objective(factionObjectiveBase)
             };
         }
-
-        /// <summary>
-        /// Gets all objectives accoring to predicate.
-        /// </summary>
-        /// <param name="predicate">Requirements to meet.</param>
-        /// <returns>A collection of <see cref="Objective"/> instances.</returns>
-        public static IEnumerable<Objective> Get(Func<Objective, bool> predicate) => List.Where(predicate);
 
         /// <summary>
         /// Reduces timer for faction.

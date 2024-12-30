@@ -38,7 +38,7 @@ namespace Exiled.API.Features.Objectives
         public override ObjectiveType Type { get; } = ObjectiveType.ScpItemPickup;
 
         /// <summary>
-        /// TODO.
+        /// Fakes picking up an item and tries to achieve this objective.
         /// </summary>
         /// <param name="target">Target player.</param>
         /// <param name="item">Item that was picked up.</param>
@@ -46,21 +46,21 @@ namespace Exiled.API.Features.Objectives
         public void AddItem(Player target, Item item, Pickup pickup) => Base.OnItemAdded(target.ReferenceHub, item.Base, pickup.Base);
 
         /// <summary>
-        /// TODO.
+        /// Fakes picking up an item and tries to achieve this objective.
         /// </summary>
         /// <param name="target">Target player.</param>
         /// <param name="item">Item that was picked up.</param>
         public void AddItem(Player target, Item item) => Base.OnItemAdded(target.ReferenceHub, item.Base, item.CreatePickup(Vector3.zero, Quaternion.identity, false).Base);
 
         /// <summary>
-        /// TODO.
+        /// Fakes picking up an item and tries to achieve this objective.
         /// </summary>
         /// <param name="target">Target player.</param>
         /// <param name="pickup">Pickup that was picked up.</param>
         public void AddItem(Player target, Pickup pickup) => Base.OnItemAdded(target.ReferenceHub, Item.Create(pickup.Type, target).Base, pickup.Base);
 
         /// <summary>
-        /// TODO.
+        /// Fakes picking up an item and tries to achieve this objective.
         /// </summary>
         /// <param name="target">Target player.</param>
         /// <param name="type">Item that was picked up.</param>

@@ -36,7 +36,7 @@ namespace Exiled.API.Features.Objectives
         public override ObjectiveType Type { get; } = ObjectiveType.HumanDamage;
 
         /// <summary>
-        /// TODO.
+        /// Fakes player's damage and tries to achieve this objective.
         /// </summary>
         /// <param name="attacker">Attacker.</param>
         /// <param name="target">Target to damage.</param>
@@ -46,7 +46,7 @@ namespace Exiled.API.Features.Objectives
             => Damage(new CustomDamageHandler(target, attacker, amount, type, string.Empty));
 
         /// <summary>
-        /// TODO.
+        /// Fakes player's damage and tries to achieve this objective.
         /// </summary>
         /// <param name="damageHandler">An <see cref="AttackerDamageHandler"/> instance.</param>
         public void Damage(AttackerDamageHandler damageHandler) => Base.OnPlayerDamaged(damageHandler.Attacker.ReferenceHub, damageHandler.Base);

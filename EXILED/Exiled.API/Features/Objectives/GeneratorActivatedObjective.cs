@@ -35,7 +35,7 @@ namespace Exiled.API.Features.Objectives
         public override ObjectiveType Type { get; } = ObjectiveType.GeneratorActivation;
 
         /// <summary>
-        /// TODO.
+        /// Fakes generator activation and tries to achieve this objective.
         /// </summary>
         /// <param name="generator">Generator that is activated.</param>
         /// <param name="player">Player that activated the generator.</param>

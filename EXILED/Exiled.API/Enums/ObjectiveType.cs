@@ -37,5 +37,10 @@ namespace Exiled.API.Enums
         /// Objective that is completed when generator is activated.
         /// </summary>
         GeneratorActivation,
+
+        /// <summary>
+        /// Objective that is completed when player escapes.
+        /// </summary>
+        Escape,
     }
 }

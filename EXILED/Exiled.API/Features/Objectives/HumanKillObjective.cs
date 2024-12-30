@@ -53,13 +53,13 @@ namespace Exiled.API.Features.Objectives
         public bool IsValidEnemy(Player target, Player player) => IsValidEnemy(target.Role, player);
 
         /// <summary>
-        /// TODO.
+        /// Fakes player's kill and tries to achieve this objective.
         /// </summary>
         /// <param name="damageHandler">An <see cref="AttackerDamageHandler"/> instance.</param>
         public void Kill(AttackerDamageHandler damageHandler) => Base.OnKill(damageHandler.Target.ReferenceHub, damageHandler.Base);
 
         /// <summary>
-        /// TODO.
+        /// Fakes player's kill and tries to achieve this objective.
         /// </summary>
         /// <param name="target">Target player.</param>
         /// <param name="attacker">Attacker.</param>
