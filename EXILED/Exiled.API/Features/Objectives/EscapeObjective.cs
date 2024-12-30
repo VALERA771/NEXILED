@@ -19,6 +19,10 @@ namespace Exiled.API.Features.Objectives
     /// </summary>
     public class EscapeObjective : HumanObjective<EscapeObjectiveFootprint>, IWrapper<BaseObjective>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EscapeObjective"/> class.
+        /// </summary>
+        /// <param name="objectiveFootprintBase">A <see cref="BaseObjective"/> instance.</param>
         internal EscapeObjective(BaseObjective objectiveFootprintBase)
             : base(objectiveFootprintBase)
         {
