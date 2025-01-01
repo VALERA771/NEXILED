@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------
-// <copyright file="Locker.cs" company="Exiled Team">
-// Copyright (c) Exiled Team. All rights reserved.
+// <copyright file="Locker.cs" company="ExMod Team">
+// Copyright (c) ExMod Team. All rights reserved.
 // Licensed under the CC BY-SA 3.0 license.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -177,7 +177,7 @@ namespace Exiled.API.Features.Lockers
                 : chamber.Spawnpoint;
 
             // If the chamber is open, immediately set the item's parent and spawn it.
-            if (chamber.Base.IsOpen)
+            if (chamber.IsOpen)
             {
                 item.Transform.SetParent(parentTransform);
                 item.Spawn();

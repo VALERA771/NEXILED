@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------
-// <copyright file="Chamber.cs" company="Exiled Team">
-// Copyright (c) Exiled Team. All rights reserved.
+// <copyright file="Chamber.cs" company="ExMod Team">
+// Copyright (c) ExMod Team. All rights reserved.
 // Licensed under the CC BY-SA 3.0 license.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -142,7 +142,7 @@ namespace Exiled.API.Features.Lockers
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether or not items should be spawned as soon as they one chamber is opened.
+        /// Gets or sets a value indicating whether items should be spawned as soon as they one chamber is opened.
         /// </summary>
         public bool InitiallySpawn
         {
@@ -160,9 +160,17 @@ namespace Exiled.API.Features.Lockers
         }
 
         /// <summary>
-        /// Gets a value indicating whether the chamber is currently open.
+        /// Gets or sets a value indicating whether the chamber is currently open.
         /// </summary>
-        public bool IsOpen => Base.IsOpen;
+        public bool IsOpen
+        {
+            get => Base.IsOpen;
+            set
+            {
+                Base.SetDoor(value, null);
+                Locker.Base.RefreshOpenedSyncvar();
+            }
+        }
 
         /// <summary>
         /// Gets the id of this chamber in <see cref="Locker"/>.
