@@ -15,26 +15,34 @@ namespace Exiled.API.Extensions
     using System.Reflection.Emit;
     using System.Text;
 
+    using AdminToys;
     using AudioPooling;
     using CustomPlayerEffects;
     using Exiled.API.Enums;
     using Exiled.API.Features.Items;
+    using Exiled.API.Features.Items.Keycards;
+    using Exiled.API.Features.Pickups.Keycards;
     using Features;
     using Features.Pools;
     using InventorySystem;
     using InventorySystem.Items;
+    using InventorySystem.Items.Autosync;
     using InventorySystem.Items.Firearms;
     using InventorySystem.Items.Firearms.Modules;
+    using InventorySystem.Items.Keycards;
     using MEC;
     using Mirror;
     using PlayerRoles;
+    using PlayerRoles.Blood;
     using PlayerRoles.FirstPersonControl;
     using PlayerRoles.PlayableScps.Scp049.Zombies;
     using PlayerRoles.PlayableScps.Scp1507;
+    using PlayerRoles.Spectating;
     using PlayerRoles.Voice;
     using RelativePositioning;
     using Respawning;
     using UnityEngine;
+    using Utils.Networking;
 
     /// <summary>
     /// A set of extensions for <see cref="Mirror"/> Networking.
@@ -49,6 +57,7 @@ namespace Exiled.API.Extensions
         private static readonly ReadOnlyDictionary<string, string> ReadOnlyRpcFullNamesValue = new(RpcFullNamesValue);
         private static MethodInfo setDirtyBitsMethodInfoValue;
         private static MethodInfo sendSpawnMessageMethodInfoValue;
+        private static string[] adminToyBaseSyncVarsValue;
 
         /// <summary>
         /// Gets <see cref="MethodInfo"/> corresponding to <see cref="Type"/>.
@@ -151,6 +160,11 @@ namespace Exiled.API.Extensions
         public static MethodInfo SendSpawnMessageMethodInfo => sendSpawnMessageMethodInfoValue ??= typeof(NetworkServer).GetMethod("SendSpawnMessage", BindingFlags.NonPublic | BindingFlags.Static);
 
         /// <summary>
+        /// Gets all <see cref="AdminToyBase"/> sync var names.
+        /// </summary>
+        public static string[] AdminToyBaseSyncVars => adminToyBaseSyncVarsValue ??= typeof(AdminToyBase).GetProperties().Where(property => property.Name.Contains("Network")).Select(property => property.Name).ToArray();
+
+        /// <summary>
         /// Plays a beep sound that only the target <paramref name="player"/> can hear.
         /// </summary>
         /// <param name="player">Target to play sound to.</param>
@@ -197,7 +211,7 @@ namespace Exiled.API.Extensions
             using (NetworkWriterPooled writer = NetworkWriterPool.Get())
             {
                 writer.WriteUShort(NetworkMessageId<RoleSyncInfo>.Id);
-                new RoleSyncInfo(Server.Host.ReferenceHub, RoleTypeId.ClassD, player.ReferenceHub).Write(writer);
+                new RoleSyncInfo(Server.Host.ReferenceHub, RoleTypeId.ClassD, player.ReferenceHub, null).Write(writer);
                 writer.WriteRelativePosition(new RelativePosition(0, 0, 0, 0, false));
                 writer.WriteUShort(0);
                 player.Connection.Send(writer);
@@ -217,7 +231,62 @@ namespace Exiled.API.Extensions
 
                 player.SendFakeSyncVar(Server.Host.Inventory.netIdentity, typeof(Inventory), nameof(Inventory.NetworkCurItem), ItemIdentifier.None);
 
-                player.Connection.Send(new RoleSyncInfo(Server.Host.ReferenceHub, Server.Host.Role, player.ReferenceHub));
+                player.Connection.Send(new RoleSyncInfo(Server.Host.ReferenceHub, Server.Host.Role, player.ReferenceHub, null));
+            });
+        }
+
+        /// <summary>
+        /// Place blood that only the <paramref name="player"/> can see.
+        /// </summary>
+        /// <param name="player">Target to play.</param>
+        /// <param name="position">The position of the blood decal.</param>
+        /// <param name="origin">The direction of the blood decal.</param>
+        /// <param name="roleTypeId">The RoleTypeId from who blood come from.</param>
+        /// <param name="gettingShotSoundIndex">The sound than player get when getting shot.</param>
+        public static void PlaceBlood(this Player player, Vector3 position, Vector3 origin, RoleTypeId roleTypeId, int gettingShotSoundIndex)
+        {
+            if (!roleTypeId.TryGetRoleBase(out PlayerRoleBase playerRoleBase) || playerRoleBase is not IBleedableRole)
+                return;
+
+            Features.Items.Firearm firearm = Features.Items.Firearm.ItemTypeToFirearmInstance[FirearmType.Com15];
+
+            if (firearm == null)
+                return;
+
+            using (NetworkWriterPooled writer = NetworkWriterPool.Get())
+            {
+                writer.WriteUShort(NetworkMessageId<RoleSyncInfo>.Id);
+                new RoleSyncInfo(Server.Host.ReferenceHub, RoleTypeId.ClassD, player.ReferenceHub, null).Write(writer);
+                writer.WriteRelativePosition(new RelativePosition(0, 0, 0, 0, false));
+                writer.WriteUShort(0);
+                player.Connection.Send(writer);
+            }
+
+            player.SendFakeSyncVar(Server.Host.Inventory.netIdentity, typeof(Inventory), nameof(Inventory.NetworkCurItem), firearm.Identifier);
+
+            if (!firearm.Base.TryGetModule(out ImpactEffectsModule impactEffectsModule))
+                return;
+
+            Timing.CallDelayed(0.1f, () => // due to selecting item we need to delay shot a bit
+            {
+                using (NetworkWriterPooled writer = NetworkWriterPool.Get())
+                {
+#pragma warning disable SA1116 // Split parameters should start on line after declaration
+                    impactEffectsModule.SendRpc(writer =>
+                    {
+                        writer.WriteSubheader(ImpactEffectsModule.RpcType.PlayerHit);
+                        writer.WriteReferenceHub(Server.Host.ReferenceHub);
+                        writer.WriteRelativePosition(new RelativePosition(position));
+                        writer.WriteRelativePosition(new RelativePosition(origin));
+                        writer.WriteByte(255);
+                        writer.WriteRoleType(RoleTypeId.ClassD);
+                    }, true);
+#pragma warning restore SA1116 // Split parameters should start on line after declaration
+                }
+
+                player.SendFakeSyncVar(Server.Host.Inventory.netIdentity, typeof(Inventory), nameof(Inventory.NetworkCurItem), ItemIdentifier.None);
+
+                player.Connection.Send(new RoleSyncInfo(Server.Host.ReferenceHub, Server.Host.Role, player.ReferenceHub, null));
             });
         }
 
@@ -402,6 +471,38 @@ namespace Exiled.API.Extensions
         }
 
         /// <summary>
+        /// Makes a player not spectatable to another player.
+        /// </summary>
+        /// <param name="target">The player who will become not spectatable.</param>
+        /// <param name="viewer">The viewer who will see this change.</param>
+        /// <param name="value">The faked value.</param>
+        public static void SetFakeSpectatable(Player target, Player viewer, bool value) => viewer.Connection.Send(new SpectatableVisibilityMessages.SpectatableVisibilityMessage(target.ReferenceHub, value));
+
+        /// <summary>
+        /// Makes the server resend a message to all clients updating a keycards details to current values.
+        /// </summary>
+        /// <param name="customKeycardItem">The keycard to resync.</param>
+        public static void ResyncKeycardItem(CustomKeycardItem customKeycardItem)
+        {
+            if (KeycardDetailSynchronizer.Database.Remove(customKeycardItem.Serial))
+            {
+                KeycardDetailSynchronizer.ServerProcessItem(customKeycardItem.Base);
+            }
+        }
+
+        /// <summary>
+        /// Makes the server resend a message to all clients updating a keycards details to current values.
+        /// </summary>
+        /// <param name="customKeycard">The keycard to resync.</param>
+        public static void ResyncKeycardPickup(CustomKeycardPickup customKeycard)
+        {
+            if (KeycardDetailSynchronizer.Database.Remove(customKeycard.Serial))
+            {
+                KeycardDetailSynchronizer.ServerProcessPickup(customKeycard.Base);
+            }
+        }
+
+        /// <summary>
         /// Send CASSIE announcement that only <see cref="Player"/> can hear.
         /// </summary>
         /// <param name="player">Target to send.</param>
@@ -583,8 +684,25 @@ namespace Exiled.API.Extensions
             NetworkWriterPool.Return(writer2);
             void CustomSyncVarGenerator(NetworkWriter targetWriter)
             {
+                bool isAdminToy = targetType.BaseType == typeof(AdminToyBase);
+
+                // all admin toys have toy-specific sync vars, so we need to write correct dirty bits for both the toys DeserializeSyncVars, but also AdminToyBase.DeserializeSyncVars in correct order
+                bool isBase = AdminToyBaseSyncVars.Contains(propertyName);
+
+                if (isAdminToy && !isBase)
+                {
+                    // no base sync var changes
+                    targetWriter.WriteULong(0);
+                }
+
                 targetWriter.WriteULong(SyncVarDirtyBits[$"{targetType.Name}.{propertyName}"]);
                 WriterExtensions[typeof(T)]?.Invoke(null, new object[2] { targetWriter, value });
+
+                if (isAdminToy && isBase)
+                {
+                    // no sub-toy sync var changes
+                    targetWriter.WriteULong(0);
+                }
             }
         }
 
@@ -701,6 +819,9 @@ namespace Exiled.API.Extensions
                     break;
                 }
             }
+
+            if (!behaviour)
+                throw new InvalidOperationException($"Failed to find a valid NetworkBehaviour for NetworkIdentity: [{behaviorOwner.name}], type: [{targetType.FullName}]. Please verify you are using the correct Type in SendFakeSync Var/Object methods.");
 
             // Write target NetworkBehavior's dirty
             Compression.CompressVarUInt(owner, value);

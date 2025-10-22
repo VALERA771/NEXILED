@@ -150,7 +150,7 @@ namespace Exiled.API.Features
         /// </summary>
         /// <seealso cref="List"/>
         /// <seealso cref="Enumerable"/>
-        public static int Count => Dictionary.Count;
+        public static int Count => global::ReferenceHub.GetPlayerCount(CentralAuth.ClientInstanceMode.ReadyClient, CentralAuth.ClientInstanceMode.Host);
 
         /// <summary>
         /// Gets a <see cref="Dictionary{TKey, TValue}"/> containing cached <see cref="Player"/> and their user ids.
@@ -373,7 +373,7 @@ namespace Exiled.API.Features
             {
                 if (!NicknameSync.ValidateCustomInfo(value, out string rejectionText))
                 {
-                    Log.Error($"Could not set CustomInfo for {Nickname}. Reason: {rejectionText}");
+                    Log.Warn($"Could not set CustomInfo for {Nickname}. Reason: {rejectionText}");
                 }
 
                 InfoArea = string.IsNullOrEmpty(value) ? InfoArea & ~PlayerInfoArea.CustomInfo : InfoArea |= PlayerInfoArea.CustomInfo;
@@ -468,6 +468,15 @@ namespace Exiled.API.Features
         }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the player has noclip enabled.
+        /// </summary>
+        public bool IsNoclipEnabled
+        {
+            get => ReferenceHub.playerStats.GetModule<AdminFlagsStat>().HasFlag(AdminFlags.Noclip);
+            set => ReferenceHub.playerStats.GetModule<AdminFlagsStat>().SetFlag(AdminFlags.Noclip, value);
+        }
+
+        /// <summary>
         /// Gets or sets a value indicating the <see cref="Player"/> that currently has the player cuffed.
         /// <para>
         /// This value will be <see langword="null"/> if the player is not cuffed. Setting this value to <see langword="null"/> will uncuff the player if they are cuffed.
@@ -522,8 +531,15 @@ namespace Exiled.API.Features
         /// <returns>Returns the direction the player is looking at.</returns>
         public Quaternion Rotation
         {
-            get => Transform.rotation;
-            set => ReferenceHub.TryOverrideRotation(value.eulerAngles);
+            get => CameraTransform.rotation;
+            set
+            {
+                Vector2 rotation = value.eulerAngles;
+                rotation.x = Mathf.Repeat(rotation.x + 180f, 360f) - 180f; // X Rotation is limited to [-88, 88] degrees, and just clamps values like 400 even though they are in range
+                rotation.x *= -1; // X Rotation is inverted in class FpcMouseLook
+                rotation.y = Mathf.Repeat(rotation.y, 360f); // This is necessary because rotation is clamped in FpcMouseLook
+                ReferenceHub.TryOverrideRotation(rotation);
+            }
         }
 
         /// <summary>
@@ -1152,6 +1168,15 @@ namespace Exiled.API.Features
         /// Gets a value indicating whether the player has agreed to microphone recording.
         /// </summary>
         public bool AgreedToRecording => VoiceChatPrivacySettings.CheckUserFlags(ReferenceHub, VcPrivacyFlags.SettingsSelected | VcPrivacyFlags.AllowRecording | VcPrivacyFlags.AllowMicCapture);
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the player can be spectated by a spectator.
+        /// </summary>
+        public bool IsSpectatable
+        {
+            get => !SpectatableVisibilityManager.IsHidden(ReferenceHub);
+            set => SpectatableVisibilityManager.SetHidden(ReferenceHub, !value);
+        }
 
         /// <summary>
         /// Gets a <see cref="Player"/> <see cref="IEnumerable{T}"/> of spectators that are currently spectating this <see cref="Player"/>.
@@ -2564,7 +2589,6 @@ namespace Exiled.API.Features
         {
             if (!HasCustomAmmoLimit(ammoType))
             {
-                Log.Error($"{nameof(Player)}.{nameof(ResetAmmoLimit)}(AmmoType): AmmoType.{ammoType} does not have a custom limit.");
                 return;
             }
 
@@ -2657,7 +2681,6 @@ namespace Exiled.API.Features
 
             if (!HasCustomCategoryLimit(category))
             {
-                Log.Error($"{nameof(Player)}.{nameof(ResetCategoryLimit)}(ItemCategory): ItemCategory.{category} does not have a custom limit.");
                 return;
             }
 
@@ -3629,6 +3652,7 @@ namespace Exiled.API.Features
             this.PlayGunSound(Position, itemType, pitch, clipIndex);
 
         /// <inheritdoc cref="Map.PlaceBlood(Vector3, Vector3)"/>
+        [Obsolete("Use PlaceBlood(this Player, Vector3, Vector3, RoleTypeId, int) instead.")]
         public void PlaceBlood(Vector3 direction) => Map.PlaceBlood(Position, direction);
 
         /// <inheritdoc cref="Map.GetNearCameras(Vector3, float)"/>
