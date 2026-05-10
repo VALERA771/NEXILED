@@ -7,15 +7,11 @@
 
 namespace Exiled.Events.EventArgs.Player
 {
-    using System.Collections.Generic;
-
     using API.Features;
     using Exiled.API.Enums;
     using Interfaces;
 
     using PlayerRoles;
-
-    using Respawning;
 
     /// <summary>
     /// Contains all information before a player escapes.
@@ -55,7 +51,11 @@ namespace Exiled.Events.EventArgs.Player
         /// <summary>
         /// Gets or sets the EscapeScenario that will represent for this player.
         /// </summary>
-        public EscapeScenario EscapeScenario { get; set; }
+        public EscapeScenario EscapeScenario
+        {
+            get => (field is EscapeScenario.None && IsAllowed) ? EscapeScenario.CustomEscape : field;
+            set;
+        }
 
         /// <summary>
         /// Gets or sets a value indicating whether the player can escape.

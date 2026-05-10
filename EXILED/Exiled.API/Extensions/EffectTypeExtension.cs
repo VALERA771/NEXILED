@@ -15,6 +15,7 @@ namespace Exiled.API.Extensions
     using CustomPlayerEffects;
     using CustomRendering;
     using Enums;
+    using Exiled.API.Features;
     using InventorySystem.Items.MarshmallowMan;
     using InventorySystem.Items.Usables.Scp244.Hypothermia;
     using PlayerRoles.FirstPersonControl;
@@ -33,7 +34,7 @@ namespace Exiled.API.Extensions
             { EffectType.AmnesiaVision, typeof(AmnesiaVision) },
             { EffectType.Asphyxiated, typeof(Asphyxiated) },
             { EffectType.Bleeding, typeof(Bleeding) },
-            { EffectType.Blinded, typeof(Blindness) },
+            { EffectType.Blindness, typeof(Blindness) },
             { EffectType.BodyshotReduction, typeof(BodyshotReduction) },
             { EffectType.Burned, typeof(Burned) },
             { EffectType.CardiacArrest, typeof(CardiacArrest) },
@@ -99,6 +100,10 @@ namespace Exiled.API.Extensions
             { EffectType.TemporaryBypass, typeof(TemporaryBypass) },
             { EffectType.TraumatizedByEvil, typeof(TraumatizedByEvil) },
             { EffectType.WhiteCandy, typeof(WhiteCandy) },
+            { EffectType.Scp1509Resurrected, typeof(Scp1509Resurrected) },
+            { EffectType.FocusedVision, typeof(FocusedVision) },
+            { EffectType.AnomalousRegeneration, typeof(AnomalousRegeneration) },
+            { EffectType.AnomalousTarget, typeof(AnomalousTarget) },
             #pragma warning restore CS0618
         });
 
@@ -130,7 +135,15 @@ namespace Exiled.API.Extensions
         /// <param name="statusEffectBase">The <see cref="StatusEffectBase"/> enum.</param>
         /// <returns>The <see cref="EffectType"/>.</returns>
         public static EffectType GetEffectType(this StatusEffectBase statusEffectBase)
-            => TypeToEffectType.TryGetValue(statusEffectBase.GetType(), out EffectType effect) ? effect : throw new InvalidOperationException("Invalid effect status base provided");
+        {
+            if (!TypeToEffectType.TryGetValue(statusEffectBase.GetType(), out EffectType type))
+            {
+                Log.Warn($"Missing EffectType for Type {statusEffectBase.GetType()}!!! This issue likely originates from a new update or a CustomEffect on your Server");
+                return EffectType.None;
+            }
+
+            return type;
+        }
 
         /// <summary>
         /// Gets the <see cref="EffectType"/> of the specified <see cref="StatusEffectBase"/>.
@@ -181,7 +194,7 @@ namespace Exiled.API.Extensions
         /// <returns>Whether the effect is a negative effect.</returns>
         /// <seealso cref="IsHarmful(EffectType)"/>
         public static bool IsNegative(this EffectType effect) => IsHarmful(effect) || effect is EffectType.AmnesiaItems
-            or EffectType.AmnesiaVision or EffectType.Blinded or EffectType.Burned or EffectType.Concussed or EffectType.Deafened
+            or EffectType.AmnesiaVision or EffectType.Blindness or EffectType.Burned or EffectType.Concussed or EffectType.Deafened
             or EffectType.Disabled or EffectType.Ensnared or EffectType.Exhausted or EffectType.Flashed or EffectType.SinkHole
             or EffectType.Stained or EffectType.InsufficientLighting or EffectType.SoundtrackMute or EffectType.Scanned or EffectType.Slowness;
 

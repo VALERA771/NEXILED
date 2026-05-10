@@ -109,6 +109,9 @@ namespace Exiled.API.Features.Pickups
 
             if (item is Jailbird jailBirditem)
             {
+                // TODO: Remove if this is fixed https://git.scpslgame.com/northwood-qa/scpsl-bug-reporting/-/issues/2816
+                jailBirditem.Base._deterioration.RecheckUsage();
+
                 MeleeDamage = jailBirditem.MeleeDamage;
                 ChargeDamage = jailBirditem.ChargeDamage;
                 FlashDuration = jailBirditem.FlashDuration;
@@ -123,11 +126,11 @@ namespace Exiled.API.Features.Pickups
             base.InitializeProperties(itemBase);
             if (itemBase is JailbirdItem jailbirdItem)
             {
-                MeleeDamage = jailbirdItem._hitreg._damageMelee;
-                ChargeDamage = jailbirdItem._hitreg._damageCharge;
-                FlashDuration = jailbirdItem._hitreg._flashedDuration;
-                ConcussionDuration = jailbirdItem._hitreg._concussionDuration;
-                Radius = jailbirdItem._hitreg._hitregRadius;
+                MeleeDamage = jailbirdItem.MeleeDamage;
+                ChargeDamage = jailbirdItem._chargeDamage;
+                FlashDuration = jailbirdItem._flashedDuration;
+                ConcussionDuration = jailbirdItem._concussionDuration;
+                Radius = Radius;
             }
         }
     }

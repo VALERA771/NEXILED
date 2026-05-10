@@ -30,12 +30,10 @@ namespace Exiled.Events
     /// </summary>
     public sealed class Events : Plugin<Config>
     {
-        private static Events instance;
-
         /// <summary>
         /// Gets the plugin instance.
         /// </summary>
-        public static Events Instance => instance;
+        public static Events Instance { get; private set; }
 
         /// <inheritdoc/>
         public override PluginPriority Priority { get; } = PluginPriority.First;
@@ -48,7 +46,7 @@ namespace Exiled.Events
         /// <inheritdoc/>
         public override void OnEnabled()
         {
-            instance = this;
+            Instance = this;
             base.OnEnabled();
 
             Stopwatch watch = Stopwatch.StartNew();
@@ -72,6 +70,7 @@ namespace Exiled.Events
             Handlers.Scp049.ActivatingSense += Handlers.Internal.Round.OnActivatingSense;
             Handlers.Player.Verified += Handlers.Internal.Round.OnVerified;
             Handlers.Map.ChangedIntoGrenade += Handlers.Internal.ExplodingGrenade.OnChangedIntoGrenade;
+            Handlers.Warhead.Detonated += Handlers.Internal.Round.OnWarheadDetonated;
 
             RoleAssigner.OnPlayersSpawned += Handlers.Server.OnAllPlayersSpawned;
             CharacterClassManager.OnRoundStarted += Handlers.Server.OnRoundStarted;
@@ -91,6 +90,11 @@ namespace Exiled.Events
 
             LabApi.Events.Handlers.PlayerEvents.ReloadingWeapon += Handlers.Player.OnReloadingWeapon;
             LabApi.Events.Handlers.PlayerEvents.UnloadingWeapon += Handlers.Player.OnUnloadingWeapon;
+
+            LabApi.Events.Handlers.Scp127Events.Talking += Handlers.Scp127.OnTalking;
+            LabApi.Events.Handlers.Scp127Events.Talked += Handlers.Scp127.OnTalked;
+            LabApi.Events.Handlers.Scp127Events.GainingExperience += Handlers.Scp127.OnGainingExperience;
+            LabApi.Events.Handlers.Scp127Events.GainExperience += Handlers.Scp127.OnGainedExperience;
 
             ServerConsole.ReloadServerName();
         }
@@ -129,6 +133,11 @@ namespace Exiled.Events
 
             LabApi.Events.Handlers.PlayerEvents.ReloadingWeapon -= Handlers.Player.OnReloadingWeapon;
             LabApi.Events.Handlers.PlayerEvents.UnloadingWeapon -= Handlers.Player.OnUnloadingWeapon;
+
+            LabApi.Events.Handlers.Scp127Events.Talking -= Handlers.Scp127.OnTalking;
+            LabApi.Events.Handlers.Scp127Events.Talked -= Handlers.Scp127.OnTalked;
+            LabApi.Events.Handlers.Scp127Events.GainingExperience -= Handlers.Scp127.OnGainingExperience;
+            LabApi.Events.Handlers.Scp127Events.GainExperience -= Handlers.Scp127.OnGainedExperience;
         }
 
         /// <summary>

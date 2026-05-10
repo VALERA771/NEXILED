@@ -143,6 +143,11 @@ namespace Exiled.API.Features
             ["GATE A ELEVATORS"] = CameraType.EzGateAElevators,
             ["GATE B INTERIOR"] = CameraType.EzGateBInterior,
             ["GATE B SIDE"] = CameraType.EzGateBSide,
+            ["GATE A STAIRWELL"] = CameraType.EzGateAStairwell,
+            ["GATE A UPPER"] = CameraType.EzGateAUpper,
+            ["LOADING BAY"] = CameraType.HczLoadingBay,
+            ["HCZ LOADING RAMP"] = CameraType.HczLoadingBayRamp,
+            ["STAIRWELL"] = CameraType.HczLoadingBayStairwell,
 
             // CustomCamera
             ["EZ ARM CAMERA TOY"] = CameraType.EzArmCameraToy,
@@ -151,8 +156,6 @@ namespace Exiled.API.Features
             ["LCZ CAMERA TOY"] = CameraType.LczCameraToy,
             ["SZ CAMERA TOY"] = CameraType.SzCameraToy,
         };
-
-        private Room room;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Camera"/> class.
@@ -215,7 +218,7 @@ namespace Exiled.API.Features
         /// <summary>
         /// Gets the camera's <see cref="Room"/>.
         /// </summary>
-        public Room Room => room ??= Room.Get(Base.Room);
+        public Room Room => field ??= Room.Get(Base.Room);
 
         /// <summary>
         /// Gets the camera's <see cref="ZoneType"/>.

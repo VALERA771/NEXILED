@@ -32,8 +32,6 @@ namespace Exiled.API.Features
     /// </summary>
     public static class Server
     {
-        private static MethodInfo sendSpawnMessage;
-
         /// <summary>
         /// Gets a dictionary that pairs assemblies with their associated plugins.
         /// </summary>
@@ -53,7 +51,7 @@ namespace Exiled.API.Features
         /// <summary>
         /// Gets the cached <see cref="SendSpawnMessage"/> <see cref="MethodInfo"/>.
         /// </summary>
-        public static MethodInfo SendSpawnMessage => sendSpawnMessage ??= typeof(NetworkServer).GetMethod("SendSpawnMessage", BindingFlags.NonPublic | BindingFlags.Static);
+        public static MethodInfo SendSpawnMessage => field ??= typeof(NetworkServer).GetMethod("SendSpawnMessage", BindingFlags.NonPublic | BindingFlags.Static);
 
         /// <summary>
         /// Gets or sets the name of the server.
@@ -111,7 +109,27 @@ namespace Exiled.API.Features
         /// <summary>
         /// Gets the actual ticks per second of the server.
         /// </summary>
-        public static double Tps => Math.Round(1f / Time.smoothDeltaTime);
+        public static double Tps
+        {
+            get
+            {
+                double delta = Time.deltaTime;
+
+                if (delta <= 0)
+                    return MaxTps;
+
+                double tps = 1d / delta;
+
+                tps = Math.Min(tps, MaxTps);
+
+                return tps;
+            }
+        }
+
+        /// <summary>
+        /// Gets the average ticks per second of the server.
+        /// </summary>
+        public static double SmoothTps => Math.Round(1f / Time.smoothDeltaTime);
 
         /// <summary>
         /// Gets or sets the max ticks per second of the server.
@@ -145,6 +163,9 @@ namespace Exiled.API.Features
 
         /// <inheritdoc cref="Player.Count"/>
         public static int PlayerCount => Player.Count;
+
+        /// <inheritdoc cref="Player.ConnectedCount"/>
+        public static int PlayerConnectedCount => Player.ConnectedCount;
 
         /// <summary>
         /// Gets or sets the maximum number of players able to be on the server.

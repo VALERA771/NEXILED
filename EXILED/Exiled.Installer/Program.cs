@@ -155,6 +155,7 @@ namespace Exiled.Installer
             }
             catch (Exception ex)
             {
+                error = true;
                 Console.WriteLine(ex);
                 Console.WriteLine(Resources.Program_MainSafe_Read_the_exception_message__read_the_readme__and_if_you_still_don_t_understand_what_to_do__then_contact__support_in_our_discord_server_with_the_attached_screenshot_of_the_full_exception);
                 if (!args.Exit)
@@ -172,7 +173,7 @@ namespace Exiled.Installer
                     r => Version.TryParse(r.TagName, out Version version)
                          && version > VersionLimit);
 
-            return releases.OrderByDescending(r => r.CreatedAt.Ticks);
+            return releases.OrderByDescending(r => r.PublishedAt);
         }
 
         private static string FormatRelease(Release r)
